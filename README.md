@@ -1,20 +1,17 @@
 # Sun-harvester Module Documentation
-# ----------------------------
 
 We propose an extension to ns-3 to accurately model the harvesting capabilities of a device powered by a photo-voltaic panel.
 The proposed model takes into account the latitude where the devices is placed, the size of the photo-voltaic panel as well the orientation and tilt angle of this latter.
 
 ### Citation
-### ============================
 
 If you use this ns-3 model for accademic purpose, authors appreciate if you cite:
 
-"A Sun Energy Harvester Model for the Network Simulator 3 (ns-3)", G. Benigno, O. Briante, G. Ruggeri, SWANSITY 2015 (To be changed after referrantiation on ieee..)
+"A Sun Energy Harvester Model for the Network Simulator 3 (ns-3)", G. Benigno, O. Briante, G. Ruggeri, SWANSITY 2015 (To be changed after referentiation on ieee..)
 
 
 
 ## Model Assumption
-## ****************************
 
 * The sun energy is available only during the light hours and for the remaining daily hours the harvestable energy is negligible;
 
@@ -28,7 +25,6 @@ From that input the amount of Instantaneously insolation on the photo-voltaic pa
 
 
 ## Implementation Details
-## ****************************
 
 The solar energy harvesting system (S-EHS) model consists of a Sun Source and a set of Sun Energy Harvesters;
 every Sun Energy Harvester is an implementation of the Energy Harvester contained into the energy framework
@@ -38,7 +34,6 @@ The Energy Source Model models the source that powers each node (e.g., rechargea
 The implementation of such a model consist in two main classes: "Sun" and "SunEnergyHarvester".
 
 ### Sun Class
-### ============================
 
 The Sun Class implements a set of functions to estimate the sun position and the relative insolation.
 The solar harvestable energy depends on a few input parameters:
@@ -66,7 +61,6 @@ Implemented methods are:
 * CalculateSunSource: a private method used to determine all the sun position parameters at ones. This function implements the Solar position algorithm (PSA).
 
 ### Sun Energy Harvester Class
-### ============================
 
 The SunEnergyHarvester class represents the kernel of the model that estimates, with high accuracy, the instantaneously power archived by
 an arbitrary tilted photo-voltaic panel oriented towards the incident insolation.
