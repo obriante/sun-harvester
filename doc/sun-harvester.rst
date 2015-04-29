@@ -4,12 +4,12 @@ Sun-harvester Module Documentation
 We propose an extension to ns-3 to accurately model the harvesting capabilities of a device powered by a photo-voltaic panel.
 The proposed model takes into account the latitude where the devices is placed, the size of the photo-voltaic panel as well the orientation and tilt angle of this latter.
 
-Citation
+Citations
 ============================
 
 If you use this ns-3 model for academic purpose, Authors will appreciate if you cite:
 
-"A Sun Energy Harvester Model for the Network Simulator 3 (ns-3)", G. Benigno, O. Briante, G. Ruggeri, SWANSITY 2015 (To be changed after referentiation on ieee..)
+"A Sun Energy Harvester Model for the Network Simulator 3 (ns-3)", G. Benigno, O. Briante, G. Ruggeri, (it is going to appear in proc of swansity 2015)
 
 
 
@@ -91,10 +91,10 @@ Implemented methods are:
 
 * UpdateHarvestedPower: called every refresh time interval.
 
-* CalculateHarvestedPower: to calculate the instantaneously harvestable power as explained in Section II.
+* CalculateHarvestedPower: to calculate the instantaneously harvestable power.
 
 
 Validation
 **********
 
-Look the paper in "Citation"  Subsection for details.
+Please refer to the paper reported in "Citations" for more details.

@@ -7,7 +7,7 @@ The proposed model takes into account the latitude where the devices is placed, 
 
 If you use this ns-3 model for accademic purpose, authors appreciate if you cite:
 
-"A Sun Energy Harvester Model for the Network Simulator 3 (ns-3)", G. Benigno, O. Briante, G. Ruggeri, SWANSITY 2015 (To be changed after referentiation on ieee..)
+"A Sun Energy Harvester Model for the Network Simulator 3 (ns-3)", G. Benigno, O. Briante, G. Ruggeri, (it is going to appear in proc of swansity 2015)
 
 
 
@@ -85,4 +85,8 @@ Implemented methods are:
 
 * UpdateHarvestedPower: called every refresh time interval.
 
-* CalculateHarvestedPower: to calculate the instantaneously harvestable power as explained in Section II.
+* CalculateHarvestedPower: to calculate the instantaneously harvestable power.
+
+### Validation
+
+Please refer to the paper reported in "Citations" for more details.
