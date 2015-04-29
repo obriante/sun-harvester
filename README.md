@@ -87,6 +87,6 @@ Implemented methods are:
 
 * CalculateHarvestedPower: to calculate the instantaneously harvestable power.
 
-### Validation
+## Validation
 
 Please refer to the paper reported in "Citations" for more details.
