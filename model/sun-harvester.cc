@@ -149,16 +149,16 @@ SunEnergyHarvester::GetTypeId (void)
 const bool SunEnergyHarvester::equals (   const  SunEnergyHarvester* sunEnergyHarvesterR)
 {
   return (
-    (this->m_panelTiltAngle == sunEnergyHarvesterR->m_panelTiltAngle)
-    &&(this->m_p_SolarCellEfficiency == sunEnergyHarvesterR->m_p_SolarCellEfficiency)
-    &&(this->m_DCDCefficiency == sunEnergyHarvesterR->m_DCDCefficiency)
-    &&(this->m_panelAzimuthAngle == sunEnergyHarvesterR->m_panelAzimuthAngle)
-    &&(this->m_diffusePercentage == sunEnergyHarvesterR->m_diffusePercentage)
-    &&(this->m_day == sunEnergyHarvesterR->m_day)
-    &&(this->m_month == sunEnergyHarvesterR->m_month)
-    &&(this->m_year == sunEnergyHarvesterR->m_year)
-    &&(this->m_hours == sunEnergyHarvesterR->m_hours)
-    &&(this->m_minutes == sunEnergyHarvesterR->m_minutes));
+    (m_panelTiltAngle == sunEnergyHarvesterR->m_panelTiltAngle)
+    &&(m_p_SolarCellEfficiency == sunEnergyHarvesterR->m_p_SolarCellEfficiency)
+    &&(m_DCDCefficiency == sunEnergyHarvesterR->m_DCDCefficiency)
+    &&(m_panelAzimuthAngle == sunEnergyHarvesterR->m_panelAzimuthAngle)
+    &&(m_diffusePercentage == sunEnergyHarvesterR->m_diffusePercentage)
+    &&(m_day == sunEnergyHarvesterR->m_day)
+    &&(m_month == sunEnergyHarvesterR->m_month)
+    &&(m_year == sunEnergyHarvesterR->m_year)
+    &&(m_hours == sunEnergyHarvesterR->m_hours)
+    &&(m_minutes == sunEnergyHarvesterR->m_minutes));
 }
 
 SunEnergyHarvester::SunEnergyHarvester ()
@@ -191,10 +191,10 @@ SunEnergyHarvester::SunEnergyHarvester (Time updateInterval,double DCDCefficienc
   m_hours = hours;
   m_minutes = minutes;
   m_harvestedPowerUpdateInterval = updateInterval;
-  NS_ASSERT (this->m_month > 0);
-  NS_ASSERT (this->m_day > 0);
-  NS_ASSERT (this->m_p_SolarCellEfficiency > 0);
-  NS_ASSERT (this->m_DCDCefficiency > 0);
+  NS_ASSERT (m_month > 0);
+  NS_ASSERT (m_day > 0);
+  NS_ASSERT (m_p_SolarCellEfficiency > 0);
+  NS_ASSERT (m_DCDCefficiency > 0);
   RefreshTime (0);
 }
 
@@ -283,13 +283,13 @@ SunEnergyHarvester::setYear (int year)
 double
 SunEnergyHarvester::getPanelDimension () const
 {
-  return this->m_panelDimension;
+  return m_panelDimension;
 }
 
 void
 SunEnergyHarvester::setPanelDimension (double dim)
 {
-  this->m_panelDimension = dim;
+  m_panelDimension = dim;
 }
 
 
@@ -366,31 +366,31 @@ SunEnergyHarvester::CalculateHarvestedPower (void)
   double moduleinsolation;
   RefreshTime (Simulator::Now ().GetSeconds ());
 
-  if ((this->m_sun->getSimTime ().tm_mday != this->m_time.tm_mday)
-      ||(this->m_sun->getSimTime ().tm_mon != this->m_time.tm_mon)
-      ||(this->m_sun->getSimTime ().tm_year != this->m_time.tm_year))
+  if ((m_sun->GetSimTime ().tm_mday != m_time.tm_mday)
+      ||(m_sun->GetSimTime ().tm_mon != m_time.tm_mon)
+      ||(m_sun->GetSimTime ().tm_year != m_time.tm_year))
     {
-      this->m_sun->setSimTime (this->m_time );
+      m_sun->SetSimTime (m_time );
       m_sun->Start ();
     }
-  int index = (this->m_time.tm_hour * 3600) + (this->m_time.tm_min * 60) + this->m_time.tm_sec;
-  idiffuse =   this->m_sun->getIncidentInsolation () * (this->m_diffusePercentage / 100) * sin ((double)(this->m_sun->getElevationAngle ()[index] * rad));
-  if (this->m_sun->getElevationAngle ()[index] > 0)
+  int index = (m_time.tm_hour * 3600) + (m_time.tm_min * 60) + m_time.tm_sec;
+  idiffuse =   m_sun->GetIncidentInsolation () * (m_diffusePercentage / 100) * sin ((double)(m_sun->GetElevationAngle ()[index] * rad));
+  if (m_sun->GetElevationAngle ()[index] > 0)
     {
-      idirect = cos ((double)((m_panelAzimuthAngle - m_sun->getAzimuthAngle ()[index]) * rad));
-      idirect = idirect * (cos ((double)(this->m_sun->getElevationAngle ()[index] * rad)) * sin ((double)(this->m_panelTiltAngle * rad)));
-      idirect = idirect + (sin ((double)(this->m_sun->getElevationAngle ()[index] * rad)) * cos ((double)(this->m_panelTiltAngle * rad)));
-      idirect = (m_sun->getIncidentInsolation () * idirect * (1 - (this->m_diffusePercentage / 100)));
+      idirect = cos ((double)((m_panelAzimuthAngle - m_sun->GetAzimuthAngle ()[index]) * rad));
+      idirect = idirect * (cos ((double)(m_sun->GetElevationAngle ()[index] * rad)) * sin ((double)(m_panelTiltAngle * rad)));
+      idirect = idirect + (sin ((double)(m_sun->GetElevationAngle ()[index] * rad)) * cos ((double)(m_panelTiltAngle * rad)));
+      idirect = (m_sun->GetIncidentInsolation () * idirect * (1 - (m_diffusePercentage / 100)));
       if (idirect < 0)
         {
           idirect = 0;
         }
       moduleinsolation = (idirect + idiffuse);
-      this->m_harvestedPower = (moduleinsolation * this->m_panelDimension * this->m_DCDCefficiency * this->m_p_SolarCellEfficiency / 10000) / this->m_sun->getLightHours ();
+      m_harvestedPower = (moduleinsolation * m_panelDimension * m_DCDCefficiency * m_p_SolarCellEfficiency / 10000) / m_sun->GetLightHours ();
     }
   else
     {
-      this->m_harvestedPower = 0;
+      m_harvestedPower = 0;
     }
   NS_LOG_DEBUG (Simulator::Now ().GetSeconds ()
                 << "s SunEnergyHarvester:Harvested energy = " << m_harvestedPower);
@@ -406,17 +406,17 @@ SunEnergyHarvester::DoGetPower (void) const
 
 void SunEnergyHarvester::RefreshTime (int seconds)
 {
-  NS_ASSERT (this->m_month > 0);
-  NS_ASSERT (this->m_day > 0);
-  this->m_time.tm_sec = seconds;
-  this->m_time.tm_min = this->m_minutes;
-  this->m_time.tm_hour = this->m_hours;
-  this->m_time.tm_mday = this->m_day;
-  this->m_time.tm_mon = this->m_month - 1;
-  this->m_time.tm_year = this->m_year;
-  this->m_time.tm_isdst = -1;
-  mktime (&this->m_time);
-  this->m_time.tm_mon = this->m_time.tm_mon + 1;
+  NS_ASSERT (m_month > 0);
+  NS_ASSERT (m_day > 0);
+  m_time.tm_sec = seconds;
+  m_time.tm_min = m_minutes;
+  m_time.tm_hour = m_hours;
+  m_time.tm_mday = m_day;
+  m_time.tm_mon = m_month - 1;
+  m_time.tm_year = m_year;
+  m_time.tm_isdst = -1;
+  mktime (&m_time);
+  m_time.tm_mon = m_time.tm_mon + 1;
   m_time.tm_yday = m_time.tm_yday + 1;
 
 }
@@ -471,6 +471,7 @@ SunEnergyHarvester::setPanelTiltAngle (double panelTiltAngle)
 std::ostream&
 operator << (std::ostream& os, SunEnergyHarvester sunHarvester)
 {
+  os << "Date: " << sunHarvester.getSun ()->GetSimTime ().tm_mday << "-" << sunHarvester.getSun ()->GetSimTime ().tm_mon << "-" <<  sunHarvester.getSun ()->GetSimTime ().tm_year;
   os << "DC-DC efficiency: " << sunHarvester.getDCDCefficiency () << "%, ";
   os << "Solar cell efficiency" << sunHarvester.getSolarCellEfficiency () << "%, ";
   os << "Panel azimuth: " << sunHarvester.getPanelAzimuthAngle () << "[' ], ";

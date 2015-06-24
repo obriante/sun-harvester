@@ -18,13 +18,25 @@
  * Author: Giovanni Benigno <giovanni.benigno.954@studenti.unirc.it>,
  *         Orazio Briante <orazio.briante@unirc.it>
  */
-#include <ns3/sun-harvester.h>
-#include <ns3/sun-helper.h>
-#include <ns3/sun-harvester-helper.h>
 
-#include "ns3/sun.h"
-#include <ns3/test.h>
+#include <ns3/basic-energy-source.h>
+#include <ns3/basic-energy-source-helper.h>
+#include <ns3/callback.h>
+#include <ns3/double.h>
+#include <ns3/integer.h>
 #include <ns3/log.h>
+#include <ns3/log-macros-disabled.h>
+#include <ns3/node-container.h>
+#include <ns3/nstime.h>
+#include <ns3/pointer.h>
+#include <ns3/ptr.h>
+#include <ns3/simulator.h>
+#include <ns3/sun.h>
+#include <ns3/sun-harvester.h>
+#include <ns3/sun-harvester-helper.h>
+#include <ns3/sun-helper.h>
+#include <ns3/test.h>
+#include <iostream>
 
 using namespace ns3;
 
@@ -100,16 +112,13 @@ SunHarvesterModelTest::DoRun (void)
 
   /*********** Install Sun *************/
   SunHelper SunHelper;
-  SunHelper.Set ("avgInsolation", DoubleValue (8.63));
+  SunHelper.Set ("AvgInsolation", DoubleValue (8.63));   //From the radiation table
   SunHelper.Set ("Longitude", DoubleValue (15.661));   //degree
   SunHelper.Set ("Latitude", DoubleValue (38.11));     //degree
-  SunHelper.Set ("Year", IntegerValue (2004));
-  SunHelper.Set ("Month", IntegerValue (6));
-  SunHelper.Set ("Day", IntegerValue (21));
 
   Ptr<Sun> SunP = SunHelper.Install ();
 
-  NS_LOG_UNCOND ("" << *SunP);
+  NS_LOG_UNCOND (SunP);
 
   /*********** Install a Sun Harvester *************/
   SunEnergyHarvesterHelper SunHarvesterHelper;
@@ -124,8 +133,8 @@ SunHarvesterModelTest::DoRun (void)
   SunHarvesterHelper.Set ("Year", IntegerValue (2004));
   SunHarvesterHelper.Set ("Month", IntegerValue (6));
   SunHarvesterHelper.Set ("Day", IntegerValue (21));
-  SunHarvesterHelper.Set ("Hours", IntegerValue (0));
-  SunHarvesterHelper.Set ("Minutes", IntegerValue (01));
+  SunHarvesterHelper.Set ("Hours", IntegerValue (00));
+  SunHarvesterHelper.Set ("Minutes", IntegerValue (00));
 
   EnergyHarvesterContainer harvesters = SunHarvesterHelper.Install (sources);
 

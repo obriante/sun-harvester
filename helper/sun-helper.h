@@ -24,7 +24,10 @@
 #ifndef SUN_HELPER_H
 #define SUN_HELPER_H
 
-#include "ns3/sun.h"
+#include <ns3/object-factory.h>
+#include <ns3/ptr.h>
+#include <ns3/sun.h>
+#include <string>
 
 namespace ns3 {
 

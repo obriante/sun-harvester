@@ -42,7 +42,7 @@
 using namespace ns3;
 
 
-NS_LOG_COMPONENT_DEFINE ("EnergyWithHarvestingExample");
+NS_LOG_COMPONENT_DEFINE ("SunHarvesterExample");
 
 /* Trace function for remaining energy at node. */
 void
@@ -76,7 +76,7 @@ main (int argc, char *argv[])
 
   double startTime = 0.0;
   CommandLine cmd;
-  cmd.AddValue ("startTime", "Simulation start time", startTime);
+  cmd.AddValue ("start", "Simulation start time", startTime);
   cmd.Parse (argc, argv);
   NodeContainer c;
   c.Create (1);     // create 1 nodes
@@ -95,7 +95,7 @@ main (int argc, char *argv[])
 
   /*********** Install Sun *************/
   SunHelper SunHelper;
-  SunHelper.Set ("avgInsolation", DoubleValue (8.63)); //From the radiation table
+  SunHelper.Set ("AvgInsolation", DoubleValue (8.63)); //From the radiation table
   SunHelper.Set ("Longitude", DoubleValue (15.661)); //degree
   SunHelper.Set ("Latitude", DoubleValue (38.11));   //degree
 

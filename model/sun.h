@@ -22,14 +22,14 @@
 #ifndef SUN_ENERGY_H
 #define SUN_ENERGY_H
 
+#include <ns3/object.h>
+#include <ns3/ptr.h>
 #include <time.h>
-#include "ns3/core-module.h"
-#include "ns3/energy-module.h"
-#include "ns3/type-id.h"
-#include "ns3/object.h"
-#include "ns3/node.h"
+#include <iostream>
 
-// Declaration of some constants
+namespace ns3 {
+
+// Constants Declaration
 #define pi    3.14159265358979323846
 #define twopi (2 * pi)
 #define rad   (pi / 180)
@@ -37,41 +37,8 @@
 #define dEarthMeanRadius     6371.01    // In km
 #define dAstronomicalUnit    149597890  // In km
 
-namespace ns3 {
-
 class Sun : public Object
 {
-private:
-  double dLongitude;
-  double dLatitude;
-  double avgInsolation;
-  tm sim_time;
-  double *ElevationAngle;
-  double *AzimuthAngle;
-  double  Noon;
-  double  Sunrise;
-  double  Sunset;
-  double  LightHours;
-  double IncidentInsolation;
-
-  /**
-   * PRIVATE
-   *
-   * This function is called for calculate some parameters of the sun. This function compute:
-   *- The Sun AzimuthAngle as a vector of 86400 seconds
-   *- The Sun ElevationAngle as a vector of 86400 seconds
-   *- The Horizzontal Insolation as a double
-   */
-  void  CalculateSunSource ();
-
-  /**
-   * PRIVATE
-   * This function compute:;
-   *- The hours of Sunrise;
-   *- The hours of dSunset;
-   *- The Light Hours.
-   */
-  void calculateLightHours ();
 
 public:
   static TypeId GetTypeId (void);
@@ -98,233 +65,77 @@ public:
    * Two SunEnergyHarvester objet are consider equals if Year,day,
    * avgInsolation, latitude and longitude are equals.
    */
-  const bool
-  equals (const  Sun*sun);
-
+  bool isEqual (const  Ptr<Sun> sun) const;
 
   /**
    *  This function is used to start calculateSunSource e CalculateLightHours;
    */
   void Start ();
 
+  /** Getters and Setters */
+  double* GetAzimuthAngle () const;
+  void SetAzimuthAngle (double* azimuthAngle);
+  double* GetElevationAngle () const;
+  void SetElevationAngle (double* elevationAngle);
+  double GetAvgInsolation () const;
+  void SetAvgInsolation (double avgInsolation);
+  double GetIncidentInsolation () const;
+  void SetIncidentInsolation (double incidentInsolation);
+  double GetLatitude () const;
+  void SetLatitude (double latitude);
+  double GetLightHours () const;
+  void SetLightHours (double lightHours);
+  double GetLongitude () const;
+  void SetLongitude (double longitude);
+  double GetNoon () const;
+  void SetNoon (double noon);
+  double GetSunrise () const;
+  void SetSunrise (double sunrise);
+  double GetSunset () const;
+  void SetSunset (double sunset);
+  const tm& GetSimTime () const;
+  void SetSimTime (const tm& simTime);
+
+private:
   /**
-   *  return dLatitude: the location's latitude.
+   * This function is called for calculate:
+   *
+   * - The Sun AzimuthAngle as a vector of 86400 seconds
+   * - The Sun ElevationAngle as a vector of 86400 seconds
+   * - The Horizontal Insolation as a double
    */
-  double
-  getLatitude () const
-  {
-    return dLatitude;
-  }
+  void  CalculateSunSource ();
 
   /**
-   * \param Latitude
-   *  Set  the location's latitude.
+   * This function compute:
+   *
+   * - The Sunrise time;
+   * - The Sunset time;
+   * - The Light Hours.
    */
-  void
-  setLatitude (double Latitude)
-  {
-    dLatitude = Latitude;
-  }
+  void CalculateLightHours ();
 
-  /**
-   *  return Longitude
-   *   the location's longitude.
-   */
-  double
-  getLongitude () const
-  {
-    return dLongitude;
-  }
+  /** Variables */
+  double m_longitude;
+  double m_latitude;
+  double m_avgInsolation;
+  tm sim_time;
+  double *ElevationAngle;
+  double *AzimuthAngle;
+  double  m_noon;
+  double  m_sunrise;
+  double  m_sunset;
+  double  m_lightHours;
+  double  m_incidentInsolation;
 
-  /**
-   * \param Longitude
-   *  Set  the location's longitude.
-   */
-  void
-  setLongitude (double  Longitude)
-  {
-    dLongitude = Longitude;
-  }
-
-
-  /**
-   *  return Azimuth : the vector of the sun's azimuth angle
-   */
-  double*
-  getAzimuthAngle () const
-  {
-    return AzimuthAngle;
-  }
-
-  /**
-   * \param azimuth
-   *  Set the vector of the sun's azimuth angle
-   */
-  void
-  setAzimuthAngle (double* azimuthangle)
-  {
-    AzimuthAngle = azimuthangle;
-  }
-
-  /**
-   *  return ElevationAngle
-   *   the vector of the sun's elevation angle.
-   */
-  double*
-  getElevationAngle () const
-  {
-    return ElevationAngle;
-  }
-
-  /**
-   * \param *elevationAngle
-   *  Set  the vector of elevationAngle longitude.
-   */
-  void
-  setElevationAngle (double* elevationAngle)
-  {
-    ElevationAngle = elevationAngle;
-  }
-
-  /**
-   *  return IncidentInsolation
-   *   the insolation in a horizzontal surface
-   */
-  double
-  getIncidentInsolation () const
-  {
-    return IncidentInsolation;
-  }
-
-  /**
-   * \param horizzonatalInsolation
-   *  Set the horizzonatalInsolation.
-   */
-  void
-  setIncidentInsolation (double IncidentInsolation)
-  {
-    this->IncidentInsolation = IncidentInsolation;
-  }
-
-  /**
-   *  return LightHours
-   *   the daytimes hours
-   */
-  double
-  getLightHours () const
-  {
-    return LightHours;
-  }
-
-  /**
-   * \param lightHours
-   *  Set the lightHours.
-   */
-  void
-  setLightHours (double lightHours)
-  {
-    LightHours = lightHours;
-  }
-
-  /**
-   *  return avgInsolation : the current avgInsolation
-   */
-  double
-  getavgInsolation () const
-  {
-    return avgInsolation;
-  }
-
-
-  void
-  setavgInsolation (double avgInsolation)
-  {
-    this->avgInsolation = avgInsolation;
-  }
-
-  /**
-   *  return Noon
-   *   the noon hours.
-   */
-  double
-  getNoon () const
-  {
-    return Noon;
-  }
-
-  /**
-   *  \param noon
-   *   set the noon hours.
-   */
-  void
-  setNoon (double noon)
-  {
-    Noon = noon;
-  }
-
-  /**
-   *  return SimTime
-   */
-  const tm&
-  getSimTime () const
-  {
-    return sim_time;
-  }
-
-
-  void
-  setSimTime (const tm& simTime)
-  {
-    sim_time = simTime;
-  }
-
-  /**
-   *  return Sunrise
-   *  the Sunrise hours.
-   */
-  double
-  getSunrise () const
-  {
-    return Sunrise;
-  }
-
-
-  void
-  setSunrise (double sunrise)
-  {
-    Sunrise = sunrise;
-  }
-
-
-  /**
-   *  return Sunset
-   *   the Sunset hour.
-   */
-  double
-  getSunset () const
-  {
-    return Sunset;
-  }
-
-  /**
-    *  return Sunset
-    *   the Sunset hour.
-    */
-  void
-  setSunset (double sunset)
-  {
-    Sunset = sunset;
-  }
-
-};
-// end class
+}; // end class
 
 /**
  * \param os          output stream
  * \param sun         Sun object
  * \return output stream
  */
-std::ostream& operator<< (std::ostream& os, Sun sun);
+std::ostream& operator<< (std::ostream& os, Ptr<Sun> sun);
 
 }//end namespace
 
