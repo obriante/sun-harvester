@@ -65,7 +65,7 @@ SunTestCase::DoRun ()
   struct tm now = *localtime ( &t );
 
   char buffer[100];
-  strftime (buffer, 80,"%Y-%m-%d %H:%M:%S", &now);
+  strftime (buffer, 80,"%Y-%m-%d %H:%M:%S %Z", &now);
 
   /*********** Install Sun *************/
   SunHelper SunHelper;
