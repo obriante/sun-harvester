@@ -97,7 +97,6 @@ SunEnergyHarvester::GetTypeId (void)
                      "Total energy harvested by the solar harvester.",
                      MakeTraceSourceAccessor (&SunEnergyHarvester::m_totalEnergyHarvestedJ),
                      "ns3::TracedValue::DoubleCallback")
-
     .AddAttribute ("Sun",
                    "The Pointer to a  Sun-Source object",
                    PointerValue (),
@@ -286,7 +285,7 @@ SunEnergyHarvester::CalculateHarvestedPower (void)
     {
       double directInsolation = cos (coordinates.dElevationAngle * rad) * sin (m_panelTiltAngle * rad) * cos ((m_panelAzimuthAngle - coordinates.dZenithAngle) * rad) + sin (coordinates.dElevationAngle * rad) * cos (m_panelTiltAngle * rad);
 
-      directInsolation = incidentInsolation * directInsolation * 1000 / 3600;   // KWh to W:  1 KWh = 1000 Wh and 1 Wh= 3600 W.
+      directInsolation = incidentInsolation*2 * directInsolation * 1000 / 3600;   // KWh to W:  1 KWh = 1000 Wh and 1 Wh= 3600 W.
 
       double insolation = ((double)m_diffusePercentage / 100) * directInsolation + directInsolation;
 
