@@ -24,6 +24,7 @@
 #include "ns3/sun.h"
 #include "ns3/log.h"
 #include "ns3/assert.h"
+#include "ns3/abort.h"
 #include "ns3/pointer.h"
 #include "ns3/string.h"
 #include "ns3/trace-source-accessor.h"
@@ -54,41 +55,21 @@ SunEnergyHarvester::GetTypeId (void)
                    MakeTimeAccessor (&SunEnergyHarvester::SetHarvestedPowerUpdateInterval,
                                      &SunEnergyHarvester::GetHarvestedPowerUpdateInterval),
                    MakeTimeChecker ())
-
-    .AddAttribute ("HarvestablePower",
-                   "The harvestable power [] that the sun energy harvester is allowed to harvest. By default, the value of this variable is set to 0.0 W",
-                   DoubleValue (0.0),
-                   MakeDoubleAccessor (&SunEnergyHarvester::m_harvestablePower),
-                   MakeDoubleChecker<double> ())
-
-    .AddTraceSource ("HarvestedPower",
-                     "Harvested power by the EnergyHarvester.",
-                     MakeTraceSourceAccessor (&SunEnergyHarvester::m_harvestedPower),
-                     "ns3::TracedValue::DoubleCallback")
-
-    .AddTraceSource ("TotalEnergyHarvested",
-                     "Total energy harvested by the solar harvester.",
-                     MakeTraceSourceAccessor (&SunEnergyHarvester::m_totalEnergyHarvestedJ),
-                     "ns3::TracedValue::DoubleCallback")
-
     .AddAttribute ("SolarCellEfficiency",
                    "The Panel Solar Cell efficiency  by default 8 %",
                    DoubleValue (8),
-                   MakeDoubleAccessor (&SunEnergyHarvester:: m_p_SolarCellEfficiency ),
+                   MakeDoubleAccessor (&SunEnergyHarvester:: m_solarCellEfficiency ),
                    MakeDoubleChecker<double> ())
-
     .AddAttribute ("DCDCEfficiency",
                    "The DC Converter efficiency  by default 90 %",
                    DoubleValue (90),
                    MakeDoubleAccessor (&SunEnergyHarvester::m_DCDCefficiency),
                    MakeDoubleChecker<double> ())
-
     .AddAttribute ("PanelTiltAngle",
                    "The Panel Tilt Angle  by default 0",
                    DoubleValue (0),
                    MakeDoubleAccessor (&SunEnergyHarvester::m_panelTiltAngle),
                    MakeDoubleChecker<double> ())
-
     .AddAttribute ("PanelAzimuthAngle",
                    "The Panel Azimuth Angle  by default 0",
                    DoubleValue (0),
@@ -99,40 +80,23 @@ SunEnergyHarvester::GetTypeId (void)
                    DoubleValue (1),
                    MakeDoubleAccessor (&SunEnergyHarvester::m_panelDimension),
                    MakeDoubleChecker<double> ())
-
     .AddAttribute ("DiffusePercentage",
                    "The percentage of the energy diffuse by default 10 %",
                    DoubleValue (10),
                    MakeDoubleAccessor (&SunEnergyHarvester::m_diffusePercentage),
                    MakeDoubleChecker<double> ())
-    .AddAttribute ("Year",
-                   "The years  ",
-                   IntegerValue (2004),
-                   MakeIntegerAccessor  (&SunEnergyHarvester::m_year),
-                   MakeIntegerChecker<int> ())
-
-    .AddAttribute ("Month",
-                   "The Month by default 1",
-                   IntegerValue (1),
-                   MakeIntegerAccessor  (&SunEnergyHarvester::m_month),
-                   MakeIntegerChecker<int> ())
-
-    .AddAttribute ("Day",
-                   "The Day by default 1",
-                   IntegerValue (1),
-                   MakeIntegerAccessor  (&SunEnergyHarvester::m_day),
-                   MakeIntegerChecker<int> ())
-    .AddAttribute ("Minutes",
-                   "The minutes  by default 0",
-                   IntegerValue (0),
-                   MakeIntegerAccessor  (&SunEnergyHarvester::m_minutes),
-                   MakeIntegerChecker<int> ())
-
-    .AddAttribute ("Hours",
-                   "The hours by default 0",
-                   IntegerValue (0),
-                   MakeIntegerAccessor  (&SunEnergyHarvester::m_hours),
-                   MakeIntegerChecker<int> ())
+    .AddAttribute ("StartAt", "The starting date for panel simulation in format (24 hours): YYYY-MM-DD hh:mm:ss; Default: 2005-06-21 09:00:00.",
+                   StringValue ("2005-06-21 09:00:00"),
+                   MakeStringAccessor  (&SunEnergyHarvester::SetDate),
+                   MakeStringChecker ())
+				    .AddTraceSource ("HarvestedPower",
+				                     "Harvested power by the EnergyHarvester.",
+				                     MakeTraceSourceAccessor (&SunEnergyHarvester::m_harvestedPower),
+				                     "ns3::TracedValue::DoubleCallback")
+				    .AddTraceSource ("TotalEnergyHarvested",
+				                     "Total energy harvested by the solar harvester.",
+				                     MakeTraceSourceAccessor (&SunEnergyHarvester::m_totalEnergyHarvestedJ),
+				                     "ns3::TracedValue::DoubleCallback")
 
     .AddAttribute ("Sun",
                    "The Pointer to a  Sun-Source object",
@@ -145,57 +109,9 @@ SunEnergyHarvester::GetTypeId (void)
 
 }
 
-
-const bool SunEnergyHarvester::equals (   const  SunEnergyHarvester* sunEnergyHarvesterR)
-{
-  return (
-    (m_panelTiltAngle == sunEnergyHarvesterR->m_panelTiltAngle)
-    &&(m_p_SolarCellEfficiency == sunEnergyHarvesterR->m_p_SolarCellEfficiency)
-    &&(m_DCDCefficiency == sunEnergyHarvesterR->m_DCDCefficiency)
-    &&(m_panelAzimuthAngle == sunEnergyHarvesterR->m_panelAzimuthAngle)
-    &&(m_diffusePercentage == sunEnergyHarvesterR->m_diffusePercentage)
-    &&(m_day == sunEnergyHarvesterR->m_day)
-    &&(m_month == sunEnergyHarvesterR->m_month)
-    &&(m_year == sunEnergyHarvesterR->m_year)
-    &&(m_hours == sunEnergyHarvesterR->m_hours)
-    &&(m_minutes == sunEnergyHarvesterR->m_minutes));
-}
-
 SunEnergyHarvester::SunEnergyHarvester ()
 {
   NS_LOG_FUNCTION (this);
-  m_DCDCefficiency = 0;
-  m_p_SolarCellEfficiency = 0;
-  m_panelAzimuthAngle = 0;
-  m_panelTiltAngle = 0;
-  m_year = 0;
-  m_month = 1;
-  m_day = 1;
-  m_harvestablePower = 0;
-  m_hours = 0;
-  m_minutes = 0;
-  RefreshTime (0);
-}
-
-SunEnergyHarvester::SunEnergyHarvester (Time updateInterval,double DCDCefficiency,double p_SolarCellEfficiency, double panelAzimuthAngle, double panelTiltAngle,
-                                        int year,int month, int day,int hours,int minutes )
-{
-  NS_LOG_FUNCTION (this << updateInterval);
-  m_DCDCefficiency = DCDCefficiency;
-  m_p_SolarCellEfficiency = p_SolarCellEfficiency;
-  m_panelAzimuthAngle = panelAzimuthAngle;
-  m_panelTiltAngle = panelTiltAngle;
-  m_year = year;
-  m_month = month;
-  m_day = day;
-  m_hours = hours;
-  m_minutes = minutes;
-  m_harvestedPowerUpdateInterval = updateInterval;
-  NS_ASSERT (m_month > 0);
-  NS_ASSERT (m_day > 0);
-  NS_ASSERT (m_p_SolarCellEfficiency > 0);
-  NS_ASSERT (m_DCDCefficiency > 0);
-  RefreshTime (0);
 }
 
 SunEnergyHarvester::~SunEnergyHarvester ()
@@ -203,15 +119,35 @@ SunEnergyHarvester::~SunEnergyHarvester ()
   NS_LOG_FUNCTION (this);
 }
 
-void
-SunEnergyHarvester::SetHarvestedPowerUpdateInterval (Time updateInterval)
+const tm SunEnergyHarvester::GetDate () const
 {
-  NS_LOG_FUNCTION (this << updateInterval);
-
-  m_harvestedPowerUpdateInterval = updateInterval;
+  NS_LOG_FUNCTION (this);
+  return m_date;
 }
 
-Time
+void SunEnergyHarvester::SetDate (const std::string& s)
+{
+  NS_LOG_FUNCTION (this << s);
+  struct tm tm;
+
+  NS_ABORT_MSG_UNLESS (strptime (s.c_str (), "%Y-%m-%d %H:%M:%S", &tm), "Date Format (24 hours): YYYY-MM-DD hh:mm:ss");
+
+  // normalization: e.g. 29/02/2013 would become 01/03/2013
+  time_t when = mktime (&tm);
+  m_startDate = *localtime (&when);
+  m_date = m_startDate;
+}
+
+void
+SunEnergyHarvester::SetHarvestedPowerUpdateInterval (const Time harvestedPowerUpdateInterval)
+{
+
+  NS_LOG_FUNCTION (this << harvestedPowerUpdateInterval);
+  m_harvestedPowerUpdateInterval = harvestedPowerUpdateInterval;
+}
+
+
+const Time
 SunEnergyHarvester::GetHarvestedPowerUpdateInterval (void) const
 {
   NS_LOG_FUNCTION (this);
@@ -220,94 +156,70 @@ SunEnergyHarvester::GetHarvestedPowerUpdateInterval (void) const
 
 }
 
-const Ptr<Sun>&
-SunEnergyHarvester::getSun () const
+double
+SunEnergyHarvester::GetDcdCefficiency () const
 {
-  return m_sun;
-}
-
-void
-SunEnergyHarvester::setSun (const Ptr<Sun>& sun)
-{
-  m_sun = sun;
-}
-
-int
-SunEnergyHarvester::getDay () const
-{
-  return m_day;
-}
-
-void
-SunEnergyHarvester::setDay (int day)
-{
-  m_day = day;
+  NS_LOG_FUNCTION (this);
+  return m_DCDCefficiency;
 }
 
 double
-SunEnergyHarvester::getDiffusePercentage () const
+SunEnergyHarvester::GetDiffusePercentage () const
 {
+  NS_LOG_FUNCTION (this);
   return m_diffusePercentage;
 }
 
-void
-SunEnergyHarvester::setDiffusePercentage (double diffusePercentage)
+double
+SunEnergyHarvester::GetHarvestablePower () const
 {
-  m_diffusePercentage = diffusePercentage;
-}
-
-int
-SunEnergyHarvester::getMonth () const
-{
-  return m_month;
-}
-
-void
-SunEnergyHarvester::setMonth (int month)
-{
-  m_month = month;
-}
-
-int
-SunEnergyHarvester::getYear () const
-{
-  return m_year;
-}
-
-void
-SunEnergyHarvester::setYear (int year)
-{
-  m_year = year;
+  NS_LOG_FUNCTION (this);
+  return m_harvestablePower;
 }
 
 double
-SunEnergyHarvester::getPanelDimension () const
+SunEnergyHarvester::GetSolarCellEfficiency () const
 {
+  NS_LOG_FUNCTION (this);
+  return m_solarCellEfficiency;
+}
+
+double
+SunEnergyHarvester::GetPanelAzimuthAngle () const
+{
+  NS_LOG_FUNCTION (this);
+  return m_panelAzimuthAngle;
+}
+
+double
+SunEnergyHarvester::GetPanelDimension () const
+{
+  NS_LOG_FUNCTION (this);
   return m_panelDimension;
 }
 
-void
-SunEnergyHarvester::setPanelDimension (double dim)
+double
+SunEnergyHarvester::GetPanelTiltAngle () const
 {
-  m_panelDimension = dim;
+  NS_LOG_FUNCTION (this);
+  return m_panelTiltAngle;
 }
 
-
-/*
- * Private functions start here.
- */
+Ptr<Sun> SunEnergyHarvester::GetSun() const
+		{
+	return m_sun;
+		}
 
 void
 SunEnergyHarvester::UpdateHarvestedPower (void)
 {
   NS_LOG_FUNCTION (this);
-  RefreshTime (Simulator::Now ().GetSeconds ());
   NS_LOG_DEBUG (Simulator::Now ().GetSeconds ()
                 << "s SunEnergyHarvester(" << GetNode ()->GetId () << "): Updating harvesting power.");
 
   Time duration = Simulator::Now () - m_lastHarvestingUpdateTime;
 
-  NS_ASSERT (duration.GetNanoSeconds () >= 0); // check if duration is valid
+  NS_ASSERT (duration.GetNanoSeconds () >= 0);       // check if duration is valid
 
   double energyHarvested = 0.0;
 
@@ -333,6 +245,10 @@ SunEnergyHarvester::UpdateHarvestedPower (void)
   // update last harvesting time stamp
   m_lastHarvestingUpdateTime = Simulator::Now ();
 
+  m_date.tm_sec = m_date.tm_sec + m_harvestedPowerUpdateInterval.GetSeconds ();
+  time_t when = mktime (&m_date);
+  m_date = *localtime (&when);
+
   m_energyHarvestingUpdateEvent = Simulator::Schedule (m_harvestedPowerUpdateInterval,
                                                        &SunEnergyHarvester::UpdateHarvestedPower,
                                                        this);
@@ -344,54 +260,43 @@ SunEnergyHarvester::DoInitialize (void)
   NS_LOG_FUNCTION (this);
 
   m_lastHarvestingUpdateTime = Simulator::Now ();
-  RefreshTime (Simulator::Now ().GetSeconds ());
-  UpdateHarvestedPower ();  // start periodic harvesting update
+  UpdateHarvestedPower ();        // start periodic harvesting update
 }
 
 void
 SunEnergyHarvester::DoDispose (void)
 {
   NS_LOG_FUNCTION (this);
-  RefreshTime (Simulator::Now ().GetSeconds ());
 }
-
-
 
 void
 SunEnergyHarvester::CalculateHarvestedPower (void)
 {
   NS_LOG_FUNCTION (this);
-  double idiffuse;
-  double idirect;
-  double moduleinsolation;
-  RefreshTime (Simulator::Now ().GetSeconds ());
 
-  if ((m_sun->GetSimTime ().tm_mday != m_time.tm_mday)
-      ||(m_sun->GetSimTime ().tm_mon != m_time.tm_mon)
-      ||(m_sun->GetSimTime ().tm_year != m_time.tm_year))
+  double incidentInsolation =m_sun->GetIncidentInsolation (&m_date);
+
+  Sun::Coordinates coordinates;
+  m_sun->CalculateSunSource (&m_date, &coordinates);
+
+  NS_LOG_DEBUG ("Zenith Angle =" << coordinates.dZenithAngle);
+  NS_LOG_DEBUG ("Elevation Angle =" << coordinates.dElevationAngle);
+
+  if (coordinates.dElevationAngle > 0)
     {
-      m_sun->SetSimTime (m_time );
-      m_sun->Start ();
-    }
-  int index = (m_time.tm_hour * 3600) + (m_time.tm_min * 60) + m_time.tm_sec;
-  idiffuse =   m_sun->GetIncidentInsolation () * (m_diffusePercentage / 100) * sin ((double)(m_sun->GetElevationAngle ()[index] * rad));
-  if (m_sun->GetElevationAngle ()[index] > 0)
-    {
-      idirect = cos ((double)((m_panelAzimuthAngle - m_sun->GetAzimuthAngle ()[index]) * rad));
-      idirect = idirect * (cos ((double)(m_sun->GetElevationAngle ()[index] * rad)) * sin ((double)(m_panelTiltAngle * rad)));
-      idirect = idirect + (sin ((double)(m_sun->GetElevationAngle ()[index] * rad)) * cos ((double)(m_panelTiltAngle * rad)));
-      idirect = (m_sun->GetIncidentInsolation () * idirect * (1 - (m_diffusePercentage / 100)));
-      if (idirect < 0)
-        {
-          idirect = 0;
-        }
-      moduleinsolation = (idirect + idiffuse);
-      m_harvestedPower = (moduleinsolation * m_panelDimension * m_DCDCefficiency * m_p_SolarCellEfficiency / 10000) / m_sun->GetLightHours ();
+      double directInsolation = cos (coordinates.dElevationAngle * rad) * sin (m_panelTiltAngle * rad) * cos ((m_panelAzimuthAngle - coordinates.dZenithAngle) * rad) + sin (coordinates.dElevationAngle * rad) * cos (m_panelTiltAngle * rad);
+
+      directInsolation = incidentInsolation * directInsolation * 1000 / 3600;   // KWh to W:  1 KWh = 1000 Wh and 1 Wh= 3600 W.
+
+      double insolation = ((double)m_diffusePercentage / 100) * directInsolation + directInsolation;
+
+      m_harvestedPower = insolation * (m_solarCellEfficiency / 100) * (m_DCDCefficiency / 100) * m_panelDimension;
     }
   else
     {
       m_harvestedPower = 0;
     }
+
   NS_LOG_DEBUG (Simulator::Now ().GetSeconds ()
                 << "s SunEnergyHarvester:Harvested energy = " << m_harvestedPower);
 
@@ -404,81 +309,23 @@ SunEnergyHarvester::DoGetPower (void) const
   return m_harvestedPower;
 }
 
-void SunEnergyHarvester::RefreshTime (int seconds)
-{
-  NS_ASSERT (m_month > 0);
-  NS_ASSERT (m_day > 0);
-  m_time.tm_sec = seconds;
-  m_time.tm_min = m_minutes;
-  m_time.tm_hour = m_hours;
-  m_time.tm_mday = m_day;
-  m_time.tm_mon = m_month - 1;
-  m_time.tm_year = m_year;
-  m_time.tm_isdst = -1;
-  mktime (&m_time);
-  m_time.tm_mon = m_time.tm_mon + 1;
-  m_time.tm_yday = m_time.tm_yday + 1;
-
-}
-double
-SunEnergyHarvester::getDCDCefficiency () const
-{
-  return m_DCDCefficiency;
-}
-
-void
-SunEnergyHarvester:: setDCDCefficiency (double dCefficiency)
-{
-  m_DCDCefficiency = dCefficiency;
-}
-
-double
-SunEnergyHarvester:: getPanelAzimuthAngle () const
-{
-  return m_panelAzimuthAngle;
-}
-
-void
-SunEnergyHarvester::setPanelAzimuthAngle (double panelAzimuthAngle)
-{
-  m_panelAzimuthAngle = panelAzimuthAngle;
-}
-
-double
-SunEnergyHarvester:: getSolarCellEfficiency  () const
-{
-  return m_p_SolarCellEfficiency;
-}
-
-void
-SunEnergyHarvester:: setSolarCellEfficiency (double panelSolCellEff)
-{
-  m_p_SolarCellEfficiency = panelSolCellEff;
-}
-
-double
-SunEnergyHarvester:: getPanelTiltAngle () const
-{
-  return m_panelTiltAngle;
-}
-
-void
-SunEnergyHarvester::setPanelTiltAngle (double panelTiltAngle)
-{
-  m_panelTiltAngle = panelTiltAngle;
-}
-
 std::ostream&
-operator << (std::ostream& os, SunEnergyHarvester sunHarvester)
+operator << (std::ostream& os, Ptr<SunEnergyHarvester> sunHarvester)
 {
-  os << "Date: " << sunHarvester.getSun ()->GetSimTime ().tm_mday << "-" << sunHarvester.getSun ()->GetSimTime ().tm_mon << "-" <<  sunHarvester.getSun ()->GetSimTime ().tm_year;
-  os << "DC-DC efficiency: " << sunHarvester.getDCDCefficiency () << "%, ";
-  os << "Solar cell efficiency" << sunHarvester.getSolarCellEfficiency () << "%, ";
-  os << "Panel azimuth: " << sunHarvester.getPanelAzimuthAngle () << "[' ], ";
-  os << "Panel Tilt angle: " << sunHarvester.getPanelTiltAngle () << "[' ], ";
-  os << "Panel Dimension: " << sunHarvester.getPanelDimension () << "[cm^2]";
-  os << "Diffuse insolation: " << sunHarvester.getDiffusePercentage () << "%, ";
-  os << "Harvesting time intervall: " << sunHarvester.GetHarvestedPowerUpdateInterval () << " [sec],";
+  char buffer[100];
+  tm date = sunHarvester->GetDate ();
+  strftime (buffer, 80,"%Y-%m-%d %H:%M:%S", &date);
+
+  os << "SunEnergyHarvester= [";
+  os << "Date: " << buffer << ", ";
+  os << "Sun: " << sunHarvester->GetSun() << ", ";
+  os << "DC-DC efficiency: " << sunHarvester->GetDcdCefficiency () << "%, ";
+  os << "Solar cell efficiency: " << sunHarvester->GetSolarCellEfficiency () << "%, ";
+  os << "Panel azimuth: " << sunHarvester->GetPanelAzimuthAngle () << "', ";
+  os << "Panel Tilt angle: " << sunHarvester->GetPanelTiltAngle () << "', ";
+  os << "Panel Dimension: " << sunHarvester->GetPanelDimension () << " [m^2], ";
+  os << "Diffuse insolation: " << sunHarvester->GetDiffusePercentage () << "%, ";
+  os << "Harvesting time intervall: " << sunHarvester->GetHarvestedPowerUpdateInterval ().GetSeconds () << " [sec] ]";
 
   return os;
 }

@@ -18,6 +18,7 @@ def build(bld):
     module_test = bld.create_ns3_module_test_library('sun-harvester')
     module_test.source = [
         'test/sun-harvester-test-suite.cc',
+        'test/sun-test-suite.cc',
         ]
 
     headers = bld(features='ns3header')

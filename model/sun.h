@@ -29,7 +29,15 @@
 
 namespace ns3 {
 
-// Constants Declaration
+/** Constants Declaration*/
+
+#define HOURS_IN_DAY 24
+#define SECONDS_IN_HOUR 3600
+#define MINUTES_IN_HOUR 60
+#define SECONDS_IN_MINUTE MINUTES_IN_HOUR
+
+#define SECONDS_IN_DAY  (HOURS_IN_DAY * SECONDS_IN_HOUR)
+
 #define pi    3.14159265358979323846
 #define twopi (2 * pi)
 #define rad   (pi / 180)
@@ -41,62 +49,20 @@ class Sun : public Object
 {
 
 public:
+	  typedef struct
+	  {
+	    double dZenithAngle;
+	    double dAzimuth;
+	    double dElevationAngle;
+	  } Coordinates;
+
   static TypeId GetTypeId (void);
 
-  /**
-   * Default constructor
-   */
   Sun ();
-
-  /**
-   * Parameterized constructor
-   */
-  Sun (double latitude, double longitude, double avgInsolation);
-
-  /**
-   *  Destroyer
-   */
   virtual ~Sun ();
 
-  /**
-   * \param sunEnergyHarvesterR is an SunEnergyHarvester objet .
-   *
-   * This function return true if two SunEnergyHarvester object are equals.
-   * Two SunEnergyHarvester objet are consider equals if Year,day,
-   * avgInsolation, latitude and longitude are equals.
-   */
-  bool isEqual (const  Ptr<Sun> sun) const;
+  double GetIncidentInsolation (const tm *date);
 
-  /**
-   *  This function is used to start calculateSunSource e CalculateLightHours;
-   */
-  void Start ();
-
-  /** Getters and Setters */
-  double* GetAzimuthAngle () const;
-  void SetAzimuthAngle (double* azimuthAngle);
-  double* GetElevationAngle () const;
-  void SetElevationAngle (double* elevationAngle);
-  double GetAvgInsolation () const;
-  void SetAvgInsolation (double avgInsolation);
-  double GetIncidentInsolation () const;
-  void SetIncidentInsolation (double incidentInsolation);
-  double GetLatitude () const;
-  void SetLatitude (double latitude);
-  double GetLightHours () const;
-  void SetLightHours (double lightHours);
-  double GetLongitude () const;
-  void SetLongitude (double longitude);
-  double GetNoon () const;
-  void SetNoon (double noon);
-  double GetSunrise () const;
-  void SetSunrise (double sunrise);
-  double GetSunset () const;
-  void SetSunset (double sunset);
-  const tm& GetSimTime () const;
-  void SetSimTime (const tm& simTime);
-
-private:
   /**
    * This function is called for calculate:
    *
@@ -104,29 +70,26 @@ private:
    * - The Sun ElevationAngle as a vector of 86400 seconds
    * - The Horizontal Insolation as a double
    */
-  void  CalculateSunSource ();
+  void  CalculateSunSource (const tm *date, Sun::Coordinates* udtSunCoordinates);
+
+
+  /** Getters */
+  double GetAvgInsolation() const;
+  double GetLatitude() const;
+  double GetLongitude() const;
+
+private:
 
   /**
-   * This function compute:
-   *
-   * - The Sunrise time;
-   * - The Sunset time;
-   * - The Light Hours.
+   *  Calculate time of the day in UT decimal hours
+   *  \return UT decimal hours
    */
-  void CalculateLightHours ();
+  double DecimalHours (const tm *date);
 
   /** Variables */
   double m_longitude;
   double m_latitude;
   double m_avgInsolation;
-  tm sim_time;
-  double *ElevationAngle;
-  double *AzimuthAngle;
-  double  m_noon;
-  double  m_sunrise;
-  double  m_sunset;
-  double  m_lightHours;
-  double  m_incidentInsolation;
 
 }; // end class
 

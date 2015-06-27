@@ -32,8 +32,7 @@
 #include <ns3/ptr.h>
 #include <ns3/simulator.h>
 #include <ns3/sun.h>
-#include <ns3/sun-harvester.h>
-#include <ns3/sun-harvester-helper.h>
+#include <ns3/sun-harvester-module.h>
 #include <ns3/sun-helper.h>
 #include <ns3/test.h>
 #include <iostream>
@@ -122,19 +121,16 @@ SunHarvesterModelTest::DoRun (void)
 
   /*********** Install a Sun Harvester *************/
   SunEnergyHarvesterHelper SunHarvesterHelper;
+  SunHarvesterHelper.Set ("StartAt", StringValue ("2004-06-21 00:00:00"));
   SunHarvesterHelper.Set ("PeriodicHarvestedPowerUpdateInterval", TimeValue (Seconds (1)));
   SunHarvesterHelper.Set ("PanelTiltAngle",DoubleValue (0));  //degree
   SunHarvesterHelper.Set ("PanelAzimuthAngle",DoubleValue (0));   //degree
-  SunHarvesterHelper.Set ("PanelDimension",DoubleValue (1));   //cm^2
+  SunHarvesterHelper.Set ("PanelDimension",DoubleValue (1e-4));   // 1 cm^2
   SunHarvesterHelper.Set ("SolarCellEfficiency",DoubleValue (8));   //8%
   SunHarvesterHelper.Set ("DCDCEfficiency",DoubleValue (90));     //90%
   SunHarvesterHelper.Set ("DiffusePercentage",DoubleValue (10));   //10%
   SunHarvesterHelper.Set ("Sun",PointerValue (SunP));
-  SunHarvesterHelper.Set ("Year", IntegerValue (2004));
-  SunHarvesterHelper.Set ("Month", IntegerValue (6));
-  SunHarvesterHelper.Set ("Day", IntegerValue (21));
-  SunHarvesterHelper.Set ("Hours", IntegerValue (00));
-  SunHarvesterHelper.Set ("Minutes", IntegerValue (00));
+
 
   EnergyHarvesterContainer harvesters = SunHarvesterHelper.Install (sources);
 
