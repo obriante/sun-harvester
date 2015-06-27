@@ -68,18 +68,18 @@ SunTestCase::DoRun ()
   strftime (buffer, 80,"%Y-%m-%d %H:%M:%S", &now);
 
   /*********** Install Sun *************/
-    SunHelper SunHelper;
-    SunHelper.Set ("AvgInsolation", DoubleValue (8.63));   // radiation table
-    SunHelper.Set ("Longitude", DoubleValue (longitude));   //degree
-    SunHelper.Set ("Latitude", DoubleValue (latitude));     //degree
+  SunHelper SunHelper;
+  SunHelper.Set ("AvgInsolation", DoubleValue (8.63));     // radiation table
+  SunHelper.Set ("Longitude", DoubleValue (longitude));     //degree
+  SunHelper.Set ("Latitude", DoubleValue (latitude));       //degree
 
-    Ptr<Sun> sun = SunHelper.Install ();
+  Ptr<Sun> sun = SunHelper.Install ();
 
-    Sun::Coordinates coordinates;
-    sun->CalculateSunSource(&now, &coordinates);
+  Sun::Coordinates coordinates;
+  sun->CalculateSunSource (&now, &coordinates);
 
-  std::cout << "Date: " <<buffer << std::endl;
-  std::cout << sun <<std::endl;
+  std::cout << "Date: " << buffer << std::endl;
+  std::cout << sun << std::endl;
   std::cout << buffer << " - Azimuth=" << coordinates.dAzimuth << ", Elevation=" << coordinates.dElevationAngle << ", Zenith=" << coordinates.dZenithAngle << std::endl;
   std::cout << buffer << " - Incident insolation=" << sun->GetIncidentInsolation (&now) << std::endl;
 

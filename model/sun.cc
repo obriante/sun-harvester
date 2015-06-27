@@ -74,16 +74,19 @@ Sun::~Sun ()
   NS_LOG_FUNCTION (this);
 }
 
-double Sun::GetAvgInsolation() const {
-	return m_avgInsolation;
+double Sun::GetAvgInsolation () const
+{
+  return m_avgInsolation;
 }
 
-double Sun::GetLatitude() const {
-	return m_latitude;
+double Sun::GetLatitude () const
+{
+  return m_latitude;
 }
 
-double Sun::GetLongitude() const {
-	return m_longitude;
+double Sun::GetLongitude () const
+{
+  return m_longitude;
 }
 
 double Sun::DecimalHours (const tm *date)
@@ -93,15 +96,15 @@ double Sun::DecimalHours (const tm *date)
 
 double Sun::GetIncidentInsolation (const tm *date)
 {
-	  Sun::Coordinates coordinates;
-	  Sun::CalculateSunSource (date, &coordinates);
-	  if (coordinates.dElevationAngle > 0)
-	    {
-	      return m_avgInsolation * (sin (coordinates.dElevationAngle * rad) / rad);
-	    }
+  Sun::Coordinates coordinates;
+  Sun::CalculateSunSource (date, &coordinates);
+  if (coordinates.dElevationAngle > 0)
+    {
+      return m_avgInsolation * (sin (coordinates.dElevationAngle * rad) / rad);
+    }
 
-	  return 0;
-	}
+  return 0;
+}
 
 void Sun::CalculateSunSource (const tm *date, Sun::Coordinates* udtSunCoordinates)
 {

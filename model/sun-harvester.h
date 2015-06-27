@@ -66,7 +66,7 @@ public:
   double GetDiffusePercentage () const;
   double GetHarvestablePower () const;
   const Time GetHarvestedPowerUpdateInterval () const;
-  Ptr<Sun> GetSun() const;
+  Ptr<Sun> GetSun () const;
   double GetSolarCellEfficiency () const;
   double GetPanelAzimuthAngle () const;
   double GetPanelDimension () const;
@@ -105,7 +105,6 @@ private:
 
 
 private:
-
   /** Input Parameter */
   double m_DCDCefficiency; // <- This is the Panel DC-DC converter  efficiency.
   double m_solarCellEfficiency; // <- The Panel Solar Cell efficiency

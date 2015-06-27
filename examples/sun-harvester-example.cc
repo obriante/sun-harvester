@@ -53,15 +53,15 @@ NS_LOG_COMPONENT_DEFINE ("SunHarvesterExample");
 void
 RemainingEnergy (double oldValue, double remainingEnergy)
 {
-	tm date = sunHarvesterPtr->GetDate ();
+  tm date = sunHarvesterPtr->GetDate ();
 
-	  char buffer[100];
-	  strftime (buffer, 80,"%Y-%m-%d %H:%M:%S;", &date);
+  char buffer[100];
+  strftime (buffer, 80,"%Y-%m-%d %H:%M:%S;", &date);
 
   std::cout << buffer << " Current remaining energy = " << remainingEnergy << " [J]" << std::endl;
 
   strftime (buffer, 80,"%Y;%m;%d;%H;%M;%S;", &date);
-    batteryCsv << buffer << remainingEnergy << ";" << std::endl;
+  batteryCsv << buffer << remainingEnergy << ";" << std::endl;
 }
 
 /* Trace function for the power harvested by the energy harvester. */
@@ -82,7 +82,7 @@ HarvestedPower (double oldValue, double harvestedPower)
 void
 TotalEnergyHarvested (double oldValue, double TotalEnergyHarvested)
 {
-	tm date = sunHarvesterPtr->GetDate ();
+  tm date = sunHarvesterPtr->GetDate ();
 
   char buffer[100];
   strftime (buffer, 80,"%Y-%m-%d %H:%M:%S;", &date);
@@ -97,14 +97,14 @@ int
 main (int argc, char *argv[])
 {
 
-	powerCsv.open("HarvestedPower.csv");
-	powerCsv << "year;month;day;hour;min;sec;harvestedPower;" << ";" << std::endl;
+  powerCsv.open ("HarvestedPower.csv");
+  powerCsv << "year;month;day;hour;min;sec;harvestedPower;" << ";" << std::endl;
 
-	batteryCsv.open("TotalEnergyHarvested.csv");
-	batteryCsv << "year;month;day;hour;min;sec;RemainingEnergy;" << ";" << std::endl;
+  batteryCsv.open ("TotalEnergyHarvested.csv");
+  batteryCsv << "year;month;day;hour;min;sec;RemainingEnergy;" << ";" << std::endl;
 
-	energyCsv.open("RemainingEnergy.csv");
-	energyCsv << "year;month;day;hour;min;sec;TotalEnergyHarvested;" << ";" << std::endl;
+  energyCsv.open ("RemainingEnergy.csv");
+  energyCsv << "year;month;day;hour;min;sec;TotalEnergyHarvested;" << ";" << std::endl;
 
   double startTime = 0.0;
   CommandLine cmd;
@@ -136,14 +136,14 @@ main (int argc, char *argv[])
   /*********** Install a Sun Harvester *************/
   SunEnergyHarvesterHelper SunHarvesterHelper;
   SunHarvesterHelper.Set ("StartAt", StringValue ("2004-06-21 00:00:00"));
-    SunHarvesterHelper.Set ("PeriodicHarvestedPowerUpdateInterval", TimeValue (Seconds (harvestingUpdateInterval)));
-    SunHarvesterHelper.Set ("PanelTiltAngle",DoubleValue (0));  //degree
-    SunHarvesterHelper.Set ("PanelAzimuthAngle",DoubleValue (0));   //degree
-    SunHarvesterHelper.Set ("PanelDimension",DoubleValue (1e-4));   // 1 cm^2
-    SunHarvesterHelper.Set ("SolarCellEfficiency",DoubleValue (8));   //8%
-    SunHarvesterHelper.Set ("DCDCEfficiency",DoubleValue (90));     //90%
-    SunHarvesterHelper.Set ("DiffusePercentage",DoubleValue (10));   //10%
-    SunHarvesterHelper.Set ("Sun",PointerValue (SunP));
+  SunHarvesterHelper.Set ("PeriodicHarvestedPowerUpdateInterval", TimeValue (Seconds (harvestingUpdateInterval)));
+  SunHarvesterHelper.Set ("PanelTiltAngle",DoubleValue (0));    //degree
+  SunHarvesterHelper.Set ("PanelAzimuthAngle",DoubleValue (0));     //degree
+  SunHarvesterHelper.Set ("PanelDimension",DoubleValue (1e-4));     // 1 cm^2
+  SunHarvesterHelper.Set ("SolarCellEfficiency",DoubleValue (8));     //8%
+  SunHarvesterHelper.Set ("DCDCEfficiency",DoubleValue (90));       //90%
+  SunHarvesterHelper.Set ("DiffusePercentage",DoubleValue (10));     //10%
+  SunHarvesterHelper.Set ("Sun",PointerValue (SunP));
 
 
   EnergyHarvesterContainer harvesters = SunHarvesterHelper.Install (sources);

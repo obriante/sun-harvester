@@ -49,12 +49,12 @@ class Sun : public Object
 {
 
 public:
-	  typedef struct
-	  {
-	    double dZenithAngle;
-	    double dAzimuth;
-	    double dElevationAngle;
-	  } Coordinates;
+  typedef struct
+  {
+    double dZenithAngle;
+    double dAzimuth;
+    double dElevationAngle;
+  } Coordinates;
 
   static TypeId GetTypeId (void);
 
@@ -74,12 +74,11 @@ public:
 
 
   /** Getters */
-  double GetAvgInsolation() const;
-  double GetLatitude() const;
-  double GetLongitude() const;
+  double GetAvgInsolation () const;
+  double GetLatitude () const;
+  double GetLongitude () const;
 
 private:
-
   /**
    *  Calculate time of the day in UT decimal hours
    *  \return UT decimal hours

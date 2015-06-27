@@ -89,14 +89,14 @@ SunEnergyHarvester::GetTypeId (void)
                    StringValue ("2005-06-21 09:00:00"),
                    MakeStringAccessor  (&SunEnergyHarvester::SetDate),
                    MakeStringChecker ())
-				    .AddTraceSource ("HarvestedPower",
-				                     "Harvested power by the EnergyHarvester.",
-				                     MakeTraceSourceAccessor (&SunEnergyHarvester::m_harvestedPower),
-				                     "ns3::TracedValue::DoubleCallback")
-				    .AddTraceSource ("TotalEnergyHarvested",
-				                     "Total energy harvested by the solar harvester.",
-				                     MakeTraceSourceAccessor (&SunEnergyHarvester::m_totalEnergyHarvestedJ),
-				                     "ns3::TracedValue::DoubleCallback")
+    .AddTraceSource ("HarvestedPower",
+                     "Harvested power by the EnergyHarvester.",
+                     MakeTraceSourceAccessor (&SunEnergyHarvester::m_harvestedPower),
+                     "ns3::TracedValue::DoubleCallback")
+    .AddTraceSource ("TotalEnergyHarvested",
+                     "Total energy harvested by the solar harvester.",
+                     MakeTraceSourceAccessor (&SunEnergyHarvester::m_totalEnergyHarvestedJ),
+                     "ns3::TracedValue::DoubleCallback")
 
     .AddAttribute ("Sun",
                    "The Pointer to a  Sun-Source object",
@@ -205,10 +205,10 @@ SunEnergyHarvester::GetPanelTiltAngle () const
   return m_panelTiltAngle;
 }
 
-Ptr<Sun> SunEnergyHarvester::GetSun() const
-		{
-	return m_sun;
-		}
+Ptr<Sun> SunEnergyHarvester::GetSun () const
+{
+  return m_sun;
+}
 
 void
 SunEnergyHarvester::UpdateHarvestedPower (void)
@@ -274,7 +274,7 @@ SunEnergyHarvester::CalculateHarvestedPower (void)
 {
   NS_LOG_FUNCTION (this);
 
-  double incidentInsolation =m_sun->GetIncidentInsolation (&m_date);
+  double incidentInsolation = m_sun->GetIncidentInsolation (&m_date);
 
   Sun::Coordinates coordinates;
   m_sun->CalculateSunSource (&m_date, &coordinates);
@@ -318,7 +318,7 @@ operator << (std::ostream& os, Ptr<SunEnergyHarvester> sunHarvester)
 
   os << "SunEnergyHarvester= [";
   os << "Date: " << buffer << ", ";
-  os << "Sun: " << sunHarvester->GetSun() << ", ";
+  os << "Sun: " << sunHarvester->GetSun () << ", ";
   os << "DC-DC efficiency: " << sunHarvester->GetDcdCefficiency () << "%, ";
   os << "Solar cell efficiency: " << sunHarvester->GetSolarCellEfficiency () << "%, ";
   os << "Panel azimuth: " << sunHarvester->GetPanelAzimuthAngle () << "', ";
