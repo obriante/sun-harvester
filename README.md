@@ -87,4 +87,9 @@ Implemented methods are:
 
 ## Validation
 
+![ScreenShot](https://raw.githubusercontent.com/KernelMonkey/sun-harvester/master/doc/BatteryDay.png)
+![ScreenShot](https://raw.githubusercontent.com/KernelMonkey/sun-harvester/master/doc/EnergyHarvestableDay.png)
+![ScreenShot](https://raw.githubusercontent.com/KernelMonkey/sun-harvester/master/doc/EnergyHarvestableYear.png)
+
+
 Please refer to the paper reported in "Citations" for more details.
