@@ -5,7 +5,7 @@ The proposed model takes into account the latitude where the devices is placed, 
 
 ### NOTE
 
-<b style='color:red'> The module is work in progress. </b>
+<b style='color:red'> The module is under development.</b>
 
 ### Citations
 
@@ -19,71 +19,50 @@ If you use this ns-3 model for accademic purpose, authors appreciate if you cite
 
 * The amount of diffuse radiation is a percentage of current direct radiation;
 
-* For each sun energy harvester into the network the harvestable energy is function of the same Insolation value.
-This assumption implies that all the devices in a simulation are located at the same latitude;
-
-* A Daily Averaged Solar Radiation data, related to a specific geographic place, is used as an input to the simulation.
-From that input the amount of Instantaneously insolation on the photo-voltaic panel of each node in the simulation is computed depending on the specific size, orientation and tilting.
-
-
 ## Implementation Details
 
-The solar energy harvesting system (S-EHS) model consists of a Sun Source and a set of Sun Energy Harvesters;
-every Sun Energy Harvester is an implementation of the Energy Harvester contained into the energy framework
-of ns-3. Energy Harvester implements all the basic mechanisms to recharge one or more Energy Source objects.
+The solar energy harvesting system (S-EHS) model consists of a Sun Source and a set of Sun Energy Harvesters; every Solar Energy Harvester is an implementation of the Energy Harvester contained into the energy framework of ns-3.
+Energy Harvester implements all the basic mechanisms to recharge one or more Energy Source objects.
 Every element structure is interconnected by a set of interfaces.
 The Energy Source Model models the source that powers each node (e.g., rechargeable batteries or super-capacitors).
-The implementation of such a model consist in two main classes: "Sun" and "SunEnergyHarvester".
+The implementation of such a model consist in two main classes: "Sun" and "SolarEnergyHarvester".
 
 ### Sun Class
 
-The Sun Class implements a set of functions to estimate the sun position and the relative insolation.
-The solar harvestable energy depends on a few input parameters:
-
-* Geographic location, designated by latitude and longitude;
-
-* Date: year, month and day;
-
-* Time: hours, minutes and seconds;
-
-* Average Daily Perpendicular Insolation;
+The Sun Class implements a set of functions to estimate the sun position and the relative incident insolation.
 
 Implemented methods are:
 
-* GetAzimuthAngle: This method returns the values of the sun Azimuth Angle;
+* GetAirMass: This method returns the Air Mass factor for the selected location;
 
-* GetZenithAngle: This method returns the values of the sun Zenith Angle;
+* GetIncidentInsolation: This method returns the instantaneous solar radiation incident on a surface perpendicular to the sun;
 
-* GetElevationAngle: This method returns the values of the sun Elevation Angle;
+* PSA: This function implements the Solar position algorithm (PSA).
 
-* GetPerpendicularInsolation: This method returns the solar irradiation incident on a surface perpendicular to the sun;
-
-* CalculateLightHours: This private method is called by CalculateSunSource to compute: the sunset time, the sunrise time and the daily hours of light;
-
-* CalculateSunSource: a private method used to determine all the sun position parameters at ones. This function implements the Solar position algorithm (PSA).
-
-### Sun Energy Harvester Class
+### Solar Energy Harvester Class
 
 The SunEnergyHarvester class represents the kernel of the model that estimates, with high accuracy, the instantaneously power archived by
 an arbitrary tilted photo-voltaic panel oriented towards the incident insolation.
 
 The input parameters are:
 
-* the DC-DC converter efficiency;
+* Date: year, month and day, hours, minutes and seconds;  (24 hours format: YYYY-MM-DD hh:mm:ss; Default: 2005-06-21 09:00:00)
 
-* the solar cell efficiency;
+* the DC-DC converter efficiency [%];
 
-* the panel azimuth angle;
+* the solar cell efficiency [%];
 
-* the panel tilt angle;
+* the panel azimuth angle [degree];
 
-* the panel dimensions;
+* the panel tilt angle [degree];
 
-* the diffuse energy percentage;
+* the panel dimension [m^2];
+
+* the diffuse energy percentage [%];
 
 Implemented methods are:
 
-* DoGetPower: to connect our Sun Energy Harvester with one or more than one Energy Source. It also returns the currently power provided by the Energy Harvester.
+* DoGetPower: to connect our Solar Energy Harvester with one or more than one Energy Source. It also returns the currently power provided by the Energy Harvester.
 
 * UpdateHarvestedPower: called every refresh time interval.
 
@@ -94,6 +73,3 @@ Implemented methods are:
 ![ScreenShot](https://raw.githubusercontent.com/KernelMonkey/sun-harvester/master/doc/BatteryDay.png)
 ![ScreenShot](https://raw.githubusercontent.com/KernelMonkey/sun-harvester/master/doc/EnergyHarvestableDay.png)
 ![ScreenShot](https://raw.githubusercontent.com/KernelMonkey/sun-harvester/master/doc/EnergyHarvestableYear.png)
-
-
-Please refer to the paper reported in "Citations" for more details.

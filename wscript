@@ -10,24 +10,22 @@ def build(bld):
     module = bld.create_ns3_module('sun-harvester', ['core','energy'])
     module.source = [
     'model/sun.cc',
-    'model/sun-harvester.cc',
-    'helper/sun-helper.cc',
-    'helper/sun-harvester-helper.cc',
+    'model/solar-energy-harvester.cc',
+    'helper/solar-energy-harvester-helper.cc',
         ]
 
     module_test = bld.create_ns3_module_test_library('sun-harvester')
     module_test.source = [
-        'test/sun-harvester-test-suite.cc',
-        'test/sun-test-suite.cc',
+    'test/solar-energy-harvester-test.cc',
+    'test/sun-test.cc',
         ]
 
     headers = bld(features='ns3header')
     headers.module = 'sun-harvester'
     headers.source = [
-     'model/sun.h',
-        'model/sun-harvester.h',
-        'helper/sun-harvester-helper.h',
-        'helper/sun-helper.h',
+        'model/sun.h',
+        'model/solar-energy-harvester.h',
+        'helper/solar-energy-harvester-helper.h',
         ]
 
     if bld.env.ENABLE_EXAMPLES:

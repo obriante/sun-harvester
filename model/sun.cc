@@ -21,95 +21,36 @@
 
 #include "sun.h"
 
+
+#include <ctime>
 #include <math.h>
-#include <ns3/assert.h>
-#include <ns3/double.h>
-#include <ns3/log.h>
-#include <ns3/log-macros-disabled.h>
-#include <ns3/object-base.h>
 
 namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE ("Sun");
-NS_OBJECT_ENSURE_REGISTERED (Sun);
-
-
-TypeId
-Sun::GetTypeId (void)
-{
-  static TypeId tid = TypeId ("ns3::Sun")
-    .SetParent<Object> ()
-    .AddConstructor<Sun> ()
-    .AddAttribute ("Latitude",
-                   "The location's latitude",
-                   DoubleValue (38.11),
-                   MakeDoubleAccessor (&Sun::m_latitude),
-                   MakeDoubleChecker<double> ())
-    .AddAttribute ("Longitude",
-                   "The longitude",
-                   DoubleValue (15.661),
-                   MakeDoubleAccessor (&Sun::m_longitude),
-                   MakeDoubleChecker<double> ())
-    .AddAttribute ("AvgInsolation",
-                   "The Average Insolation [kWh/m^2/day]",
-                   DoubleValue (8.63),
-                   MakeDoubleAccessor (&Sun::m_avgInsolation),
-                   MakeDoubleChecker<double> ());
-
-  return tid;
-
-}
-
-
-Sun::Sun ()
-{
-  NS_LOG_FUNCTION (this);
-  m_latitude = 0;
-  m_longitude = 0;
-  m_avgInsolation = 0;
-}
-
-Sun::~Sun ()
-{
-  NS_LOG_FUNCTION (this);
-}
-
-double Sun::GetAvgInsolation () const
-{
-  return m_avgInsolation;
-}
-
-double Sun::GetLatitude () const
-{
-  return m_latitude;
-}
-
-double Sun::GetLongitude () const
-{
-  return m_longitude;
-}
-
-double Sun::DecimalHours (const tm *date)
-{
-  return (double) (date->tm_hour + 1 + (date->tm_min + date->tm_sec / SECONDS_IN_MINUTE ) / MINUTES_IN_HOUR);
-}
-
-double Sun::GetIncidentInsolation (const tm *date)
+double
+Sun::GetIncidentInsolation (const tm *date, const double &latitude, const double &longitude)
 {
   Sun::Coordinates coordinates;
-  Sun::CalculateSunSource (date, &coordinates);
+  Sun::PSA (date, latitude, longitude, &coordinates);
   if (coordinates.dElevationAngle > 0)
     {
-      return m_avgInsolation * (sin (coordinates.dElevationAngle * rad) / rad);
+      return GetAirMass (latitude) * (sin (coordinates.dElevationAngle * rad) / rad);
     }
 
   return 0;
 }
 
-void Sun::CalculateSunSource (const tm *date, Sun::Coordinates* udtSunCoordinates)
+double
+Sun::DecimalHours (const tm *date)
+{
+  return (double) ((date->tm_hour + 1 + (date->tm_min + date->tm_sec / SECONDS_IN_MINUTE ) / MINUTES_IN_HOUR) - date->tm_gmtoff/SECONDS_IN_HOUR);
+}
+
+void
+Sun::PSA (const tm *date, const double &latitude, const double &longitude, Sun::Coordinates* udtSunCoordinates)
 {
 
-  double dDecimalHours = DecimalHours (date);
+  double dDecimalHours = Sun::DecimalHours (date);
 
   int year = date->tm_year + 1900;
   int month = date->tm_mon + 1;
@@ -190,9 +131,9 @@ void Sun::CalculateSunSource (const tm *date, Sun::Coordinates* udtSunCoordinate
       0.0657098283 * dElapsedJulianDays
       + dDecimalHours;
     dLocalMeanSiderealTime = (dGreenwichMeanSiderealTime * 15
-                              + m_longitude) * rad;
+                              + longitude) * rad;
     dHourAngle = dLocalMeanSiderealTime - dRightAscension;
-    dLatitudeInRadians = m_latitude * rad;
+    dLatitudeInRadians = latitude * rad;
     dCos_Latitude = cos ( dLatitudeInRadians );
     dSin_Latitude = sin ( dLatitudeInRadians );
     dCos_HourAngle = cos ( dHourAngle );
@@ -216,14 +157,14 @@ void Sun::CalculateSunSource (const tm *date, Sun::Coordinates* udtSunCoordinate
   }
 }
 
-std::ostream&
-operator << (std::ostream& os, Ptr<Sun> sun)
+double
+Sun::GetAirMass (const double &latitude)
 {
-  os << "Latitude: " << sun->GetLatitude () << "' N, ";
-  os << "Longitude: " << sun->GetLongitude () << "' N, ";
-  os << "Average Insolation: " << sun->GetAvgInsolation () << " [kWh/m^2/day]";
+  double AM = 1 / cos (latitude * rad);
 
-  return os;
+  return 1.353 * pow (0.7, pow (AM, 0.678));
 }
 
 } /* namespace ns3 */
+
+

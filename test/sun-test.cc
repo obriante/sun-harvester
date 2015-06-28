@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * Author: Orazio Briante <orazio.briante@unirc.it>
+ * Author: Cristiano Tapparello <cristiano.tapparello@rochester.edu>
  */
 
 #include <ns3/log.h>
@@ -26,7 +26,8 @@
 #include <ns3/double.h>
 #include <ns3/config.h>
 #include <ns3/string.h>
-#include <ns3/sun-harvester-module.h>
+#include <ns3/sun.h>
+
 using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE ("SunTestSuite");
@@ -65,23 +66,14 @@ SunTestCase::DoRun ()
   struct tm now = *localtime ( &t );
 
   char buffer[100];
-  strftime (buffer, 80,"%Y-%m-%d %H:%M:%S %Z", &now);
-
-  /*********** Install Sun *************/
-  SunHelper SunHelper;
-  SunHelper.Set ("AvgInsolation", DoubleValue (8.63));     // radiation table
-  SunHelper.Set ("Longitude", DoubleValue (longitude));     //degree
-  SunHelper.Set ("Latitude", DoubleValue (latitude));       //degree
-
-  Ptr<Sun> sun = SunHelper.Install ();
+  strftime (buffer, 80,"%Y-%m-%d %H:%M:%S", &now);
 
   Sun::Coordinates coordinates;
-  sun->CalculateSunSource (&now, &coordinates);
+  Sun::PSA (&now, latitude, longitude, &coordinates);
 
-  std::cout << "Date: " << buffer << std::endl;
-  std::cout << sun << std::endl;
+  std::cout << "Latitude: " << latitude << ", Air Mass=" << Sun::GetAirMass (latitude) << ", sin elevation: " << sin (coordinates.dElevationAngle * rad) / rad << std::endl;
   std::cout << buffer << " - Azimuth=" << coordinates.dAzimuth << ", Elevation=" << coordinates.dElevationAngle << ", Zenith=" << coordinates.dZenithAngle << std::endl;
-  std::cout << buffer << " - Incident insolation=" << sun->GetIncidentInsolation (&now) << std::endl;
+  std::cout << buffer << " - Incident insolation=" << Sun::GetIncidentInsolation (&now, latitude, longitude) << std::endl;
 
 }
 

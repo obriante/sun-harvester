@@ -40,55 +40,49 @@
 namespace ns3 {
 
 /**
- * \ingroup SunHarvestModel
- * SunEnergyHarvester increases remaining energy stored in an associated
- * Energy Source. The SunEnergyHarvester implements a  model in which
+ * \ingroup SolarEnergyHarvester
+ *
+ * SolarEnergyHarvester increases remaining energy stored in an associated
+ * Energy Source. The SolarEnergyHarvester implements a  model in which
  * the amount of power provided by the harvester varies according to years, month day and time
  * Unit of power is chosen as Watt since energy models typically calculate
  * energy as (time in seconds * power in Watt).
  *
  */
 
-class SunEnergyHarvester : public EnergyHarvester
+class SolarEnergyHarvester : public EnergyHarvester
 {
 public:
   static TypeId GetTypeId (void);
 
-  SunEnergyHarvester ();
-  virtual ~SunEnergyHarvester ();
+  SolarEnergyHarvester (void);
+
+  virtual ~SolarEnergyHarvester (void);
 
   void SetDate (const std::string& s);
   void SetHarvestedPowerUpdateInterval (const Time harvestedPowerUpdateInterval);
 
   const tm GetDate (void) const;
 
-  double GetDcdCefficiency () const;
-  double GetDiffusePercentage () const;
-  double GetHarvestablePower () const;
-  const Time GetHarvestedPowerUpdateInterval () const;
-  Ptr<Sun> GetSun () const;
-  double GetSolarCellEfficiency () const;
-  double GetPanelAzimuthAngle () const;
-  double GetPanelDimension () const;
-  double GetPanelTiltAngle () const;
+  double GetDcdCefficiency (void) const;
+  double GetDiffusePercentage (void) const;
+  double GetHarvestablePower (void) const;
+  const Time GetHarvestedPowerUpdateInterval (void) const;
+  double GetLatitude (void) const;
+  double GetLongitude (void) const;
+  double GetSolarCellEfficiency (void) const;
+  double GetPanelAzimuthAngle (void) const;
+  double GetPanelDimension (void) const;
+  double GetPanelTiltAngle (void) const;
+
 
 private:
   /// Defined in ns3::Object
-  virtual void DoInitialize (void);
+  void DoInitialize (void);
 
   /// Defined in ns3::Object
-  virtual void DoDispose (void);
+  void DoDispose (void);
 
-  /**
-   * Calculates the sun harvested Power.
-   *This function:
-   * - Setting the time when calculate the energy harvest;
-   * - Setting the location in term of latitude and longitude;
-   * - Setting the module parameters;
-   * - Calculate the sun position;
-   * - Calculate the sun irradiation;
-   * - CalculateEnergyHarvester ;
-   */
   void CalculateHarvestedPower (void);
 
   /**
@@ -103,9 +97,10 @@ private:
    */
   void UpdateHarvestedPower (void);
 
-
 private:
   /** Input Parameter */
+  double m_latitude;
+  double m_longitude;
   double m_DCDCefficiency; // <- This is the Panel DC-DC converter  efficiency.
   double m_solarCellEfficiency; // <- The Panel Solar Cell efficiency
   double m_panelAzimuthAngle; // <- The Panel Solar Azimuth angle.
@@ -116,8 +111,6 @@ private:
 
   tm m_startDate;
   tm m_date;
-
-  Ptr<Sun> m_sun; // <- A pointer to a Sun Source Object
 
   /** Traced Parameter */
   TracedValue<double> m_harvestedPower; // <-The current harvested power, in Watt
@@ -132,10 +125,10 @@ private:
 
 /**
  * \param os                    output stream
- * \param sunHarvester		SunEnergyHarvester object
+ * \param sunHarvester		SolarEnergyHarvester object
  * \return output stream
  */
-std::ostream& operator<< (std::ostream& os, Ptr<SunEnergyHarvester> sunHarvester);
+std::ostream& operator<< (std::ostream& os, Ptr<SolarEnergyHarvester> sunHarvester);
 
 } // namespace ns3
 

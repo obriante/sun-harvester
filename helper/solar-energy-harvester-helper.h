@@ -19,34 +19,35 @@
  *         Orazio Briante <orazio.briante@unirc.it>
  */
 
+#ifndef SOLAR_ENERGY_HARVESTER_HELPER_H
+#define SOLAR_ENERGY_HARVESTER_HELPER_H
 
-#include "ns3/sun.h"
-#include "sun-helper.h"
+#include "ns3/energy-harvester-helper.h"
+#include "ns3/energy-source.h"
+#include "ns3/node.h"
 
 namespace ns3 {
 
-SunHelper::SunHelper ()
+/**
+ * \ingroup energy
+ * \brief Creates a SolarEnergyHarvester object.
+ */
+class SolarEnergyHarvesterHelper : public EnergyHarvesterHelper
 {
-  m_Sun.SetTypeId ("ns3::Sun");
-}
+public:
+  SolarEnergyHarvesterHelper (void);
+  ~SolarEnergyHarvesterHelper (void);
 
-SunHelper::~SunHelper ()
-{
-}
+  void Set (std::string name, const AttributeValue &v);
 
-void
-SunHelper::Set (std::string name, const AttributeValue &v)
-{
-  m_Sun.Set (name, v);
-}
-Ptr<Sun> SunHelper::Install ()
-{
-  Ptr<Sun> sun = m_Sun.Create<Sun> ();
-  return sun;
-}
+private:
+  virtual Ptr<EnergyHarvester> DoInstall (Ptr<EnergySource> source) const;
 
+private:
+  ObjectFactory m_solarEnergyHarvester;
 
-
+};
 
 } // namespace ns3
 
+#endif /* defined(SOLAR_ENERGY_HARVESTER_HELPER_H) */

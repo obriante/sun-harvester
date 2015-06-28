@@ -19,35 +19,44 @@
  *         Orazio Briante <orazio.briante@unirc.it>
  */
 
+#include "solar-energy-harvester-helper.h"
+#include "ns3/pointer.h"
 
 
-#ifndef SUN_HELPER_H
-#define SUN_HELPER_H
-
-#include <ns3/object-factory.h>
-#include <ns3/ptr.h>
-#include <ns3/sun.h>
-#include <string>
+#include "ns3/energy-harvester.h"
 
 namespace ns3 {
 
-/**
- * \ingroup energy
- * \brief Creates a Sun  object.
- */
-class SunHelper
+SolarEnergyHarvesterHelper::SolarEnergyHarvesterHelper (void)
 {
-public:
-  SunHelper ();
-  ~SunHelper ();
+  m_solarEnergyHarvester.SetTypeId ("ns3::SolarEnergyHarvester");
+}
 
-  void Set (std::string name, const AttributeValue &v);
-  Ptr<Sun> Install ();
-private:
-  ObjectFactory m_Sun;
+SolarEnergyHarvesterHelper::~SolarEnergyHarvesterHelper (void)
+{
+}
 
-};
+void
+SolarEnergyHarvesterHelper::Set (std::string name, const AttributeValue &v)
+{
+  m_solarEnergyHarvester.Set (name, v);
+}
+
+Ptr<EnergyHarvester>
+SolarEnergyHarvesterHelper::DoInstall (Ptr<EnergySource> source) const
+{
+  NS_ASSERT (source != 0);
+  Ptr<Node> node = source->GetNode ();
+
+  // Create a new Basic Energy Harvester
+  Ptr<EnergyHarvester> harvester = m_solarEnergyHarvester.Create<EnergyHarvester> ();
+  NS_ASSERT (harvester != 0);
+
+  // Connect the Basic Energy Harvester to the Energy Source
+  source->ConnectEnergyHarvester (harvester);
+  harvester->SetNode (node);
+  harvester->SetEnergySource (source);
+  return harvester;
+}
 
 } // namespace ns3
-
-#endif /* defined(SUN_HELPER_H) */
