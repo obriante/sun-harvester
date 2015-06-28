@@ -5,7 +5,7 @@ The proposed model takes into account the latitude where the devices is placed, 
 
 ### NOTE
 
-<span style="color:orange;"> The module is work in progress. <span>
+<b style='color:red'> The module is work in progress. </b>
 
 ### Citations
 
