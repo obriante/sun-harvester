@@ -3,6 +3,10 @@
 We propose an extension to ns-3 to accurately model the harvesting capabilities of a device powered by a photo-voltaic panel.
 The proposed model takes into account the latitude where the devices is placed, the size of the photo-voltaic panel as well the orientation and tilt angle of this latter.
 
+### NOTE
+
+<span style="color:orange;"> The module is work in progress. <span>
+
 ### Citations
 
 If you use this ns-3 model for accademic purpose, authors appreciate if you cite:
