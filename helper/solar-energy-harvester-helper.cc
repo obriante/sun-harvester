@@ -20,12 +20,17 @@
  */
 
 #include "solar-energy-harvester-helper.h"
+
 #include "ns3/pointer.h"
+#include "ns3/log.h"
 
 
 #include "ns3/energy-harvester.h"
 
 namespace ns3 {
+
+NS_LOG_COMPONENT_DEFINE ("SolarEnergyHarvesterHelper");
+
 
 SolarEnergyHarvesterHelper::SolarEnergyHarvesterHelper (void)
 {
@@ -57,6 +62,23 @@ SolarEnergyHarvesterHelper::DoInstall (Ptr<EnergySource> source) const
   harvester->SetNode (node);
   harvester->SetEnergySource (source);
   return harvester;
+}
+
+void
+SolarEnergyHarvesterHelper::EnableAsciiInternal (Ptr<OutputStreamWrapper> stream, Ptr<SolarEnergyHarvester> nd)
+{
+  NS_LOG_FUNCTION (this);
+
+  NS_ASSERT (stream);
+
+  uint32_t nodeid = nd->GetNode ()->GetId ();
+  std::ostringstream oss;
+
+  oss.str ("");
+  oss << "/NodeList/" << nodeid << "/$ns3::SolarEnergyHarvester/HarvestedPower";
+  nd->TraceConnect ("HarvestedPower", oss.str (), MakeBoundCallback (&SolarEnergyTraceHelper::DefaultHarvestedPowerSinkWithContext, stream));
+  nd->TraceConnect ("TotalEnergyHarvested", oss.str (), MakeBoundCallback (&SolarEnergyTraceHelper::DefaultTotalEnergyHarvestedSinkWithContext, stream));
+
 }
 
 } // namespace ns3

@@ -43,7 +43,7 @@ Sun::GetIncidentInsolation (const tm *date, const double &latitude, const double
 double
 Sun::DecimalHours (const tm *date)
 {
-  return (double) ((date->tm_hour + 1 + (date->tm_min + date->tm_sec / SECONDS_IN_MINUTE ) / MINUTES_IN_HOUR) - date->tm_gmtoff/SECONDS_IN_HOUR);
+  return (double) ((date->tm_hour + 1 + (date->tm_min + date->tm_sec / SECONDS_IN_MINUTE ) / MINUTES_IN_HOUR) - date->tm_gmtoff / SECONDS_IN_HOUR);
 }
 
 void

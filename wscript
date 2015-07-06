@@ -12,6 +12,7 @@ def build(bld):
     'model/sun.cc',
     'model/solar-energy-harvester.cc',
     'helper/solar-energy-harvester-helper.cc',
+    'helper/solar-energy-trace-helper.cc',
         ]
 
     module_test = bld.create_ns3_module_test_library('sun-harvester')
@@ -26,6 +27,7 @@ def build(bld):
         'model/sun.h',
         'model/solar-energy-harvester.h',
         'helper/solar-energy-harvester-helper.h',
+        'helper/solar-energy-trace-helper.h',
         ]
 
     if bld.env.ENABLE_EXAMPLES:

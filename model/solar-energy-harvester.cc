@@ -99,14 +99,14 @@ SolarEnergyHarvester::GetTypeId (void)
                    StringValue ("2015-01-01 09:00:00"),
                    MakeStringAccessor  (&SolarEnergyHarvester::SetDate),
                    MakeStringChecker ())
-				    .AddTraceSource ("HarvestedPower",
-				                     "Harvested power by the EnergyHarvester.",
-				                     MakeTraceSourceAccessor (&SolarEnergyHarvester::m_harvestedPower),
-				                     "ns3::TracedValue::DoubleCallback")
-				    .AddTraceSource ("TotalEnergyHarvested",
-				                     "Total energy harvested by the solar harvester.",
-				                     MakeTraceSourceAccessor (&SolarEnergyHarvester::m_totalEnergyHarvestedJ),
-				                     "ns3::TracedValue::DoubleCallback")
+    .AddTraceSource ("HarvestedPower",
+                     "Harvested power by the EnergyHarvester.",
+                     MakeTraceSourceAccessor (&SolarEnergyHarvester::m_harvestedPower),
+                     "ns3::TracedValue::DoubleCallback")
+    .AddTraceSource ("TotalEnergyHarvested",
+                     "Total energy harvested by the solar harvester.",
+                     MakeTraceSourceAccessor (&SolarEnergyHarvester::m_totalEnergyHarvestedJ),
+                     "ns3::TracedValue::DoubleCallback")
   ;
   return tid;
 
@@ -284,7 +284,7 @@ void
 SolarEnergyHarvester::DoDispose (void)
 {
   NS_LOG_FUNCTION (this);
-  m_energyHarvestingUpdateEvent.Cancel();
+  m_energyHarvestingUpdateEvent.Cancel ();
 }
 
 void

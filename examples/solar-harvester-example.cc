@@ -50,61 +50,63 @@ NS_LOG_COMPONENT_DEFINE ("SolarHarvesterExample");
 void
 RemainingEnergy (double oldValue, double remainingEnergy)
 {
-	tm date = solarHarvesterPtr->GetDate ();
+  tm date = solarHarvesterPtr->GetDate ();
 
-	  char buffer[100];
-	  strftime (buffer, 80,"%Y-%m-%d %H:%M:%S;", &date);
+  char buffer[100];
+  strftime (buffer, 80,"%Y-%m-%d %H:%M:%S;", &date);
 
-	  std::cout << buffer << " Current remaining energy = " << remainingEnergy << " [J]" << std::endl;
+  std::cout << buffer << " Current remaining energy = " << remainingEnergy << " [J]" << std::endl;
 
-	  strftime (buffer, 80,"%Y;%m;%d;%H;%M;%S;", &date);
-	  batteryCsv << buffer << remainingEnergy << ";" << std::endl;
+  strftime (buffer, 80,"%Y;%m;%d;%H;%M;%S;", &date);
+  batteryCsv << buffer << remainingEnergy << ";" << std::endl;
 }
 
 /* Trace function for the power harvested by the energy harvester. */
 void
 HarvestedPower (double oldValue, double harvestedPower)
 {
-	tm date = solarHarvesterPtr->GetDate ();
+  tm date = solarHarvesterPtr->GetDate ();
 
-	  char buffer[100];
-	  strftime (buffer, 80,"%Y-%m-%d %H:%M:%S;", &date);
-	  std::cout << buffer << " Current harvested power = " << harvestedPower << " [W]" << std::endl;
+  char buffer[100];
+  strftime (buffer, 80,"%Y-%m-%d %H:%M:%S;", &date);
+  std::cout << buffer << " Current harvested power = " << harvestedPower << " [W]" << std::endl;
 
-	  strftime (buffer, 80,"%Y;%m;%d;%H;%M;%S;", &date);
-	  powerCsv << buffer << harvestedPower << ";" << std::endl;
+  strftime (buffer, 80,"%Y;%m;%d;%H;%M;%S;", &date);
+  powerCsv << buffer << harvestedPower << ";" << std::endl;
 }
 
 /* Trace function for the total energy harvested by the node. */
 void
 TotalEnergyHarvested (double oldValue, double TotalEnergyHarvested)
 {
-	tm date = solarHarvesterPtr->GetDate ();
+  tm date = solarHarvesterPtr->GetDate ();
 
-	  char buffer[100];
-	  strftime (buffer, 80,"%Y-%m-%d %H:%M:%S;", &date);
-	  std::cout << buffer << " Total energy harvested by harvester = " << TotalEnergyHarvested << " [J]" << std::endl;
+  char buffer[100];
+  strftime (buffer, 80,"%Y-%m-%d %H:%M:%S;", &date);
+  std::cout << buffer << " Total energy harvested by harvester = " << TotalEnergyHarvested << " [J]" << std::endl;
 
-	  strftime (buffer, 80,"%Y;%m;%d;%H;%M;%S;", &date);
-	  energyCsv << buffer << TotalEnergyHarvested << ";" << std::endl;
+  strftime (buffer, 80,"%Y;%m;%d;%H;%M;%S;", &date);
+  energyCsv << buffer << TotalEnergyHarvested << ";" << std::endl;
 }
 
 int
 main (int argc, char *argv[])
 {
-  /* LogComponentEnable ("Config", LOG_LEVEL_DEBUG);
-   LogComponentEnable ("BasicEnergySource", LOG_LEVEL_DEBUG);
-   LogComponentEnable ("SolarEnergyHarvester", LOG_LEVEL_DEBUG);
-   LogComponentEnable ("SolarEnergyHarvesterTestSuite", LOG_LEVEL_DEBUG);*/
+  SolarEnergyHarvesterHelper solarHarvesterHelper;
+  solarHarvesterHelper.EnableLogComponents (LOG_LEVEL_DEBUG);
 
-	powerCsv.open ("HarvestedPower.csv");
-	  powerCsv << "year;month;day;hour;min;sec;harvestedPower;" << ";" << std::endl;
+  LogComponentEnable ("Config", LOG_LEVEL_DEBUG);
+  LogComponentEnable ("BasicEnergySource", LOG_LEVEL_DEBUG);
+  LogComponentEnable ("SolarEnergyHarvesterTestSuite", LOG_LEVEL_DEBUG);
 
-	  batteryCsv.open ("TotalEnergyHarvested.csv");
-	  batteryCsv << "year;month;day;hour;min;sec;RemainingEnergy;" << ";" << std::endl;
+  powerCsv.open ("HarvestedPower.csv");
+  powerCsv << "year;month;day;hour;min;sec;harvestedPower;" << ";" << std::endl;
 
-	  energyCsv.open ("RemainingEnergy.csv");
-	  energyCsv << "year;month;day;hour;min;sec;TotalEnergyHarvested;" << ";" << std::endl;
+  batteryCsv.open ("TotalEnergyHarvested.csv");
+  batteryCsv << "year;month;day;hour;min;sec;RemainingEnergy;" << ";" << std::endl;
+
+  energyCsv.open ("RemainingEnergy.csv");
+  energyCsv << "year;month;day;hour;min;sec;TotalEnergyHarvested;" << ";" << std::endl;
 
   double startTime = 0.0;
   CommandLine cmd;
@@ -127,7 +129,7 @@ main (int argc, char *argv[])
 
 
   /*********** Install a Sun Harvester *************/
-  SolarEnergyHarvesterHelper solarHarvesterHelper;
+
   solarHarvesterHelper.Set ("StartAt", StringValue ("2004-06-21 00:00:00"));
   solarHarvesterHelper.Set ("PeriodicHarvestedPowerUpdateInterval", TimeValue (Seconds (harvestingUpdateInterval)));
   solarHarvesterHelper.Set ("PanelTiltAngle",DoubleValue (0));//degree
@@ -146,7 +148,6 @@ main (int argc, char *argv[])
   solarHarvesterPtr = DynamicCast<SolarEnergyHarvester> (harvesters.Get (0));
   solarHarvesterPtr->TraceConnectWithoutContext ("HarvestedPower", MakeCallback (&HarvestedPower));
   solarHarvesterPtr->TraceConnectWithoutContext ("TotalEnergyHarvested", MakeCallback (&TotalEnergyHarvested));
-
 
   std::cout << solarHarvesterPtr << std::endl;
 

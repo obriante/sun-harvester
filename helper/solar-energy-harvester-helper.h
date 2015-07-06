@@ -23,6 +23,7 @@
 #define SOLAR_ENERGY_HARVESTER_HELPER_H
 
 #include "ns3/energy-harvester-helper.h"
+#include "ns3/solar-energy-trace-helper.h"
 #include "ns3/energy-source.h"
 #include "ns3/node.h"
 
@@ -32,13 +33,16 @@ namespace ns3 {
  * \ingroup energy
  * \brief Creates a SolarEnergyHarvester object.
  */
-class SolarEnergyHarvesterHelper : public EnergyHarvesterHelper
+class SolarEnergyHarvesterHelper : public EnergyHarvesterHelper,
+                                   public SolarEnergyTraceHelper
 {
 public:
   SolarEnergyHarvesterHelper (void);
   ~SolarEnergyHarvesterHelper (void);
 
   void Set (std::string name, const AttributeValue &v);
+
+  virtual void EnableAsciiInternal (Ptr<OutputStreamWrapper> stream, Ptr<SolarEnergyHarvester> nd);
 
 private:
   virtual Ptr<EnergyHarvester> DoInstall (Ptr<EnergySource> source) const;
