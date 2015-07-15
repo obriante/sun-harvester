@@ -59,9 +59,9 @@ public:
    */
   static void PSA (const tm *date, const double &latitude, const double &longitude, Sun::Coordinates* udtSunCoordinates);
 
-  static double GetIncidentInsolation (const tm *date, const double &latitude, const double &longitude);
+  static double GetIncidentInsolation (const tm *date, const double &latitude, const double &longitude, const double &altitude);
 
-  static double GetAirMass (const double &latitude);
+  static double GetAirMass (const double &latitude, const double &altitude);
 
 private:
   /**

@@ -28,13 +28,14 @@
 namespace ns3 {
 
 double
-Sun::GetIncidentInsolation (const tm *date, const double &latitude, const double &longitude)
+Sun::GetIncidentInsolation (const tm *date, const double &latitude, const double &longitude, const double &altitude)
 {
   Sun::Coordinates coordinates;
   Sun::PSA (date, latitude, longitude, &coordinates);
   if (coordinates.dElevationAngle > 0)
     {
-      return GetAirMass (latitude) * (sin (coordinates.dElevationAngle * rad) / rad);
+      return GetAirMass (latitude, altitude) * (sin (coordinates.dElevationAngle * rad) / rad);
+      //return GetAirMass (latitude);
     }
 
   return 0;
@@ -158,11 +159,12 @@ Sun::PSA (const tm *date, const double &latitude, const double &longitude, Sun::
 }
 
 double
-Sun::GetAirMass (const double &latitude)
+Sun::GetAirMass (const double &latitude, const double &altitude)
 {
   double AM = 1 / cos (latitude * rad);
+  double a = 0.14;
 
-  return 1.353 * pow (0.7, pow (AM, 0.678));
+  return 1.353 * ((1 - a * altitude) * pow (0.7, pow (AM, 0.678)) + a * altitude);
 }
 
 } /* namespace ns3 */

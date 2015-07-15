@@ -61,6 +61,7 @@ SunTestCase::DoRun ()
 
   double latitude = 38.11;
   double longitude = 15.661;
+  double altitude = 31;
 
   time_t t = time (0);        // get time now
   struct tm now = *localtime ( &t );
@@ -71,9 +72,9 @@ SunTestCase::DoRun ()
   Sun::Coordinates coordinates;
   Sun::PSA (&now, latitude, longitude, &coordinates);
 
-  std::cout << "Latitude: " << latitude << ", Air Mass=" << Sun::GetAirMass (latitude) << ", sin elevation: " << sin (coordinates.dElevationAngle * rad) / rad << std::endl;
+  std::cout << "Latitude: " << latitude << ", Air Mass=" << Sun::GetAirMass (latitude, altitude) << ", sin elevation: " << sin (coordinates.dElevationAngle * rad) / rad << std::endl;
   std::cout << buffer << " - Azimuth=" << coordinates.dAzimuth << ", Elevation=" << coordinates.dElevationAngle << ", Zenith=" << coordinates.dZenithAngle << std::endl;
-  std::cout << buffer << " - Incident insolation=" << Sun::GetIncidentInsolation (&now, latitude, longitude) << std::endl;
+  std::cout << buffer << " - Incident insolation=" << Sun::GetIncidentInsolation (&now, latitude, longitude, altitude) << std::endl;
 
 }
 

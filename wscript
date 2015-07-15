@@ -7,7 +7,7 @@
 #     conf.check_nonfatal(header_name='stdint.h', define_name='HAVE_STDINT_H')
 
 def build(bld):
-    module = bld.create_ns3_module('sun-harvester', ['core','energy'])
+    module = bld.create_ns3_module('sun-harvester', ['core','config-store', 'energy'])
     module.source = [
     'model/sun.cc',
     'model/solar-energy-harvester.cc',

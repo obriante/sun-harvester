@@ -64,6 +64,7 @@ public:
 
   const tm GetDate (void) const;
 
+  double GetAltitude (void) const;
   double GetDcdCefficiency (void) const;
   double GetDiffusePercentage (void) const;
   double GetHarvestablePower (void) const;
@@ -101,6 +102,7 @@ private:
   /** Input Parameter */
   double m_latitude;
   double m_longitude;
+  double m_altitude;
   double m_DCDCefficiency; // <- This is the Panel DC-DC converter  efficiency.
   double m_solarCellEfficiency; // <- The Panel Solar Cell efficiency
   double m_panelAzimuthAngle; // <- The Panel Solar Azimuth angle.

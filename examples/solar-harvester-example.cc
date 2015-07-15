@@ -19,6 +19,7 @@
  *         Orazio Briante <orazio.briante@unirc.it>
  */
 #include "ns3/core-module.h"
+#include "ns3/config-store-module.h"
 #include "ns3/network-module.h"
 #include "ns3/mobility-module.h"
 #include "ns3/config-store-module.h"
@@ -41,6 +42,8 @@ using namespace ns3;
 std::ofstream powerCsv;
 std::ofstream energyCsv;
 std::ofstream batteryCsv;
+
+std::string savePath = "src/sun-harvester/examples/";
 
 Ptr<SolarEnergyHarvester> solarHarvesterPtr;
 
@@ -92,54 +95,53 @@ TotalEnergyHarvested (double oldValue, double TotalEnergyHarvested)
 int
 main (int argc, char *argv[])
 {
+  bool debug = false;
+
+  std::string configFile = savePath + "sun-harvester-example.xml";
+
+  CommandLine cmd;
+  cmd.AddValue ("debug", "Flag to enable/disable debug", debug);
+  cmd.AddValue ("config", "The configuration file name", configFile);
+  cmd.Parse (argc, argv);
+
+  // input config store: txt format
+  Config::SetDefault ("ns3::ConfigStore::Filename", StringValue (configFile));
+  Config::SetDefault ("ns3::ConfigStore::FileFormat", StringValue ("Xml"));
+  Config::SetDefault ("ns3::ConfigStore::Mode", StringValue ("Load"));
+
+  ConfigStore config;
+  config.ConfigureDefaults ();
+
+
+
   SolarEnergyHarvesterHelper solarHarvesterHelper;
-  solarHarvesterHelper.EnableLogComponents (LOG_LEVEL_DEBUG);
 
-  LogComponentEnable ("Config", LOG_LEVEL_DEBUG);
-  LogComponentEnable ("BasicEnergySource", LOG_LEVEL_DEBUG);
-  LogComponentEnable ("SolarEnergyHarvesterTestSuite", LOG_LEVEL_DEBUG);
+  if (debug)
+    {
+      solarHarvesterHelper.EnableLogComponents (LOG_LEVEL_DEBUG);
+      LogComponentEnable ("Config", LOG_LEVEL_DEBUG);
+      LogComponentEnable ("BasicEnergySource", LOG_LEVEL_DEBUG);
+      LogComponentEnable ("SolarHarvesterExample", LOG_LEVEL_DEBUG);
+    }
 
-  powerCsv.open ("HarvestedPower.csv");
+  powerCsv.open (std::string (savePath + "HarvestedPower.csv").c_str ());
   powerCsv << "year;month;day;hour;min;sec;harvestedPower;" << ";" << std::endl;
 
-  batteryCsv.open ("TotalEnergyHarvested.csv");
+  batteryCsv.open (std::string (savePath + "TotalEnergyHarvested.csv").c_str ());
   batteryCsv << "year;month;day;hour;min;sec;RemainingEnergy;" << ";" << std::endl;
 
-  energyCsv.open ("RemainingEnergy.csv");
+  energyCsv.open (std::string (savePath + "RemainingEnergy.csv").c_str ());
   energyCsv << "year;month;day;hour;min;sec;TotalEnergyHarvested;" << ";" << std::endl;
 
-  double startTime = 0.0;
-  CommandLine cmd;
-  cmd.AddValue ("startTime", "Simulation start time", startTime);
-  cmd.Parse (argc, argv);
   NodeContainer c;
-  c.Create (1);     // create 1 nodes
-
-  /* Energy Harvester variables */
-  double harvestingUpdateInterval = 1;  // seconds
+  c.Create (1);       // create 1 nodes
 
   /* energy source */
   BasicEnergySourceHelper basicSourceHelper;
-
-  /* configure energy source */
-  basicSourceHelper.Set ("BasicEnergySourceInitialEnergyJ", DoubleValue (1.0));
-
-  /* install source */
   EnergySourceContainer sources = basicSourceHelper.Install (c);
 
 
-  /*********** Install a Sun Harvester *************/
-
-  solarHarvesterHelper.Set ("StartAt", StringValue ("2004-06-21 00:00:00"));
-  solarHarvesterHelper.Set ("PeriodicHarvestedPowerUpdateInterval", TimeValue (Seconds (harvestingUpdateInterval)));
-  solarHarvesterHelper.Set ("PanelTiltAngle",DoubleValue (0));//degree
-  solarHarvesterHelper.Set ("PanelAzimuthAngle",DoubleValue (0)); //degree
-  solarHarvesterHelper.Set ("PanelDimension",DoubleValue (1e-4)); // 1 cm^2
-  solarHarvesterHelper.Set ("SolarCellEfficiency",DoubleValue (8)); //8%
-  solarHarvesterHelper.Set ("DCDCEfficiency",DoubleValue (90));   //90%
-  solarHarvesterHelper.Set ("DiffusePercentage",DoubleValue (10)); //10%
-  solarHarvesterHelper.Set ("Longitude", DoubleValue (15.661)); //degree
-  solarHarvesterHelper.Set ("Latitude", DoubleValue (38.11));   //degree
+  /*********** Solar Harvester *************/
 
   EnergyHarvesterContainer harvesters = solarHarvesterHelper.Install (sources);
   Ptr<BasicEnergySource> basicSourcePtr = DynamicCast<BasicEnergySource> (sources.Get (0));
@@ -149,9 +151,9 @@ main (int argc, char *argv[])
   solarHarvesterPtr->TraceConnectWithoutContext ("HarvestedPower", MakeCallback (&HarvestedPower));
   solarHarvesterPtr->TraceConnectWithoutContext ("TotalEnergyHarvested", MakeCallback (&TotalEnergyHarvested));
 
-  std::cout << solarHarvesterPtr << std::endl;
-
   Simulator::Stop (Days (1));
+
+  std::cout << solarHarvesterPtr << std::endl;
   Simulator::Run ();
   Simulator::Destroy ();
 

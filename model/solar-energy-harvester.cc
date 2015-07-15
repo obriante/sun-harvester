@@ -65,6 +65,11 @@ SolarEnergyHarvester::GetTypeId (void)
                    DoubleValue (15.661),
                    MakeDoubleAccessor (&SolarEnergyHarvester::m_longitude),
                    MakeDoubleChecker<double> ())
+    .AddAttribute ("Altitude",
+                   "The location's altitude from the sea level [m]",
+                   DoubleValue (31),
+                   MakeDoubleAccessor (&SolarEnergyHarvester::m_altitude),
+                   MakeDoubleChecker<double> ())
     .AddAttribute ("SolarCellEfficiency",
                    "The Panel Solar Cell efficiency  by default 8 %",
                    DoubleValue (8),
@@ -223,6 +228,13 @@ SolarEnergyHarvester::GetPanelTiltAngle (void) const
   return m_panelTiltAngle;
 }
 
+double
+SolarEnergyHarvester::GetAltitude (void) const
+{
+  NS_LOG_FUNCTION (this);
+  return m_altitude;
+}
+
 /*
  * Private functions start here.
  */
@@ -292,7 +304,7 @@ SolarEnergyHarvester::CalculateHarvestedPower (void)
 {
   NS_LOG_FUNCTION (this);
 
-  double incidentInsolation = Sun::GetIncidentInsolation (&m_date, m_latitude, m_longitude);
+  double incidentInsolation = Sun::GetIncidentInsolation (&m_date, m_latitude, m_longitude, m_altitude) / 2;
 
   Sun::Coordinates coordinates;
   Sun::PSA (&m_date, m_latitude, m_longitude, &coordinates);
@@ -304,7 +316,9 @@ SolarEnergyHarvester::CalculateHarvestedPower (void)
     {
       double directInsolation = cos (coordinates.dElevationAngle * rad) * sin (m_panelTiltAngle * rad) * cos ((m_panelAzimuthAngle - coordinates.dZenithAngle) * rad) + sin (coordinates.dElevationAngle * rad) * cos (m_panelTiltAngle * rad);
 
-      directInsolation = incidentInsolation * directInsolation * 1000 / 3600;                 // KWh to W:  1 KWh = 1000 Wh and 1 Wh= 3600 W.
+      // directInsolation = incidentInsolation * directInsolation * 1000 / 3600;                 // KWh to W:  1 KWh = 1000 Wh and 1 Wh= 3600 W.
+
+      directInsolation = incidentInsolation * directInsolation * (3600 / 1000);
 
       double insolation = ((double)m_diffusePercentage / 100) * directInsolation + directInsolation;
 
@@ -336,6 +350,9 @@ operator << (std::ostream& os, Ptr<SolarEnergyHarvester> sunHarvester)
 
   os << "SolarEnergyHarvester= [";
   os << "Date: " << buffer << ", ";
+  os << "Latitude: " << sunHarvester->GetLatitude () << ", ";
+  os << "Longitude: " << sunHarvester->GetLongitude () << ", ";
+  os << "Altitude: " << sunHarvester->GetAltitude () << ", ";
   os << "DC-DC efficiency: " << sunHarvester->GetDcdCefficiency () << "%, ";
   os << "Solar cell efficiency: " << sunHarvester->GetSolarCellEfficiency () << "%, ";
   os << "Panel azimuth: " << sunHarvester->GetPanelAzimuthAngle () << "', ";
