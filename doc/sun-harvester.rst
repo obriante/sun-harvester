@@ -48,7 +48,9 @@ an arbitrary tilted photo-voltaic panel oriented towards the incident insolation
 
 The input parameters are:
 
-* Date: year, month and day, hours, minutes and seconds;  (24 hours format: YYYY-MM-DD hh:mm:ss; Default: 2005-06-21 09:00:00)
+* Latitude, Longitude, Altitude;
+* the time between two consecutive periodic updates;
+* the Date to simulate: year, month and day, hours, minutes and seconds;  (24 hours format: YYYY-MM-DD hh:mm:ss; Default: 2005-06-21 09:00:00)
 * the DC-DC converter efficiency [%];
 * the solar cell efficiency [%];
 * the panel azimuth angle [degree];
@@ -66,3 +68,5 @@ Validation
 **********
 
 Please refer to the paper reported in "Citations" for more details.
+
+TODO: Model validation with real hardware.
