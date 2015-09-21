@@ -36,7 +36,6 @@
 #include "ns3/event-id.h"
 #include "ns3/device-energy-model.h"
 
-
 namespace ns3 {
 
 /**
@@ -122,7 +121,6 @@ private:
   EventId m_energyHarvestingUpdateEvent; // <- Energy harvesting event
   Time m_lastHarvestingUpdateTime; // <- This is last harvesting time
   Time m_harvestedPowerUpdateInterval; // <- This is  the harvestable energy update interval
-
 };  //end class
 
 /**

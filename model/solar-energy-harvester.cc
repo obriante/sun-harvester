@@ -162,7 +162,6 @@ SolarEnergyHarvester::GetHarvestedPowerUpdateInterval (void) const
   NS_LOG_FUNCTION (this);
 
   return m_harvestedPowerUpdateInterval;
-
 }
 
 double
@@ -304,8 +303,6 @@ SolarEnergyHarvester::CalculateHarvestedPower (void)
 {
   NS_LOG_FUNCTION (this);
 
-  double incidentInsolation = Sun::GetIncidentInsolation (&m_date, m_latitude, m_longitude, m_altitude) / 2;
-
   Sun::Coordinates coordinates;
   Sun::PSA (&m_date, m_latitude, m_longitude, &coordinates);
 
@@ -314,13 +311,11 @@ SolarEnergyHarvester::CalculateHarvestedPower (void)
 
   if (coordinates.dElevationAngle > 0)
     {
-      double directInsolation = cos (coordinates.dElevationAngle * rad) * sin (m_panelTiltAngle * rad) * cos ((m_panelAzimuthAngle - coordinates.dZenithAngle) * rad) + sin (coordinates.dElevationAngle * rad) * cos (m_panelTiltAngle * rad);
+      double incidentInsolation = 2 * Sun::GetIncidentInsolation (&m_date, m_latitude, m_longitude, m_altitude);
 
-      // directInsolation = incidentInsolation * directInsolation * 1000 / 3600;                 // KWh to W:  1 KWh = 1000 Wh and 1 Wh= 3600 W.
+      double directInsolation = incidentInsolation * (cos (coordinates.dElevationAngle * rad) * sin (m_panelTiltAngle * rad) * cos ((m_panelAzimuthAngle - coordinates.dZenithAngle) * rad) + sin (coordinates.dElevationAngle * rad) * cos (m_panelTiltAngle * rad));
 
-      directInsolation = incidentInsolation * directInsolation * (3600 / 1000);
-
-      double insolation = ((double)m_diffusePercentage / 100) * directInsolation + directInsolation;
+      double insolation = ((double)m_diffusePercentage / 100) * incidentInsolation + directInsolation;
 
       m_harvestedPower = insolation * (m_solarCellEfficiency / 100) * (m_DCDCefficiency / 100) * m_panelDimension;
     }
@@ -329,8 +324,7 @@ SolarEnergyHarvester::CalculateHarvestedPower (void)
       m_harvestedPower = 0;
     }
 
-  NS_LOG_DEBUG (Simulator::Now ().GetSeconds ()
-                << "s SolarEnergyHarvester:Harvested energy = " << m_harvestedPower);
+  NS_LOG_DEBUG (Simulator::Now ().GetSeconds () << "s SolarEnergyHarvester:Harvested energy = " << m_harvestedPower);
 
 }
 

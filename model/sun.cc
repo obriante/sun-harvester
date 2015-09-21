@@ -34,7 +34,7 @@ Sun::GetIncidentInsolation (const tm *date, const double &latitude, const double
   Sun::PSA (date, latitude, longitude, &coordinates);
   if (coordinates.dElevationAngle > 0)
     {
-      return GetAirMass (latitude, altitude) * (sin (coordinates.dElevationAngle * rad) / rad);
+      return GetAirMass (latitude, altitude) * (sin (coordinates.dElevationAngle * rad) / rad) * 1e3;
       //return GetAirMass (latitude);
     }
 

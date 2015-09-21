@@ -49,7 +49,6 @@ private:
 
 private:
   ObjectFactory m_solarEnergyHarvester;
-
 };
 
 } // namespace ns3

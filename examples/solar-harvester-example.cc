@@ -107,6 +107,7 @@ main (int argc, char *argv[])
   // input config store: txt format
   Config::SetDefault ("ns3::ConfigStore::Filename", StringValue (configFile));
   Config::SetDefault ("ns3::ConfigStore::FileFormat", StringValue ("Xml"));
+  //Config::SetDefault ("ns3::ConfigStore::Mode", StringValue ("Save"));
   Config::SetDefault ("ns3::ConfigStore::Mode", StringValue ("Load"));
 
   ConfigStore config;
@@ -150,6 +151,8 @@ main (int argc, char *argv[])
   solarHarvesterPtr = DynamicCast<SolarEnergyHarvester> (harvesters.Get (0));
   solarHarvesterPtr->TraceConnectWithoutContext ("HarvestedPower", MakeCallback (&HarvestedPower));
   solarHarvesterPtr->TraceConnectWithoutContext ("TotalEnergyHarvested", MakeCallback (&TotalEnergyHarvested));
+
+  //config.ConfigureAttributes();
 
   Simulator::Stop (Days (1));
 

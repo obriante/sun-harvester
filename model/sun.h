@@ -54,11 +54,15 @@ public:
   } Coordinates;
 
   /**
-   *  Calculate local coordinates ( azimuth and zenith angle ) in degrees
-   *  \return SunCoordinates
+   *  Calculate local sun coordinates
+   *  \return SunCoordinates - i.e., azimuth and zenith angle in degrees
    */
   static void PSA (const tm *date, const double &latitude, const double &longitude, Sun::Coordinates* udtSunCoordinates);
 
+  /**
+     *  Estimate the Incident insolation
+     *  \return the Incident insolation in [W/m^2]
+     */
   static double GetIncidentInsolation (const tm *date, const double &latitude, const double &longitude, const double &altitude);
 
   static double GetAirMass (const double &latitude, const double &altitude);
