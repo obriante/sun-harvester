@@ -5,13 +5,13 @@ The proposed model takes into account the latitude where the devices is placed, 
 
 ### NOTE
 
-<b style='color:red'> The module is under development.</b>
+### The module is under development.
 
 ### Citations
 
 If you use this ns-3 model for accademic purpose, authors appreciate if you cite:
 
-<strong>G. Benigno, O. Briante, and G. Ruggeri, “A sun energy harvester model for the network simulator 3 (ns-3),” in SWANSITY 2015 - 2nd Workshop on Smart Wireless Access Networks for Smart cITY (IEEE SECON Workshop) (SWANSITY 2015), Seattle, USA, Jun. 2015.<strong>
+<strong>G. Benigno, O. Briante, and G. Ruggeri, “A sun energy harvester model for the network simulator 3 (ns-3),” in SWANSITY 2015 - 2nd Workshop on Smart Wireless Access Networks for Smart cITY (IEEE SECON Workshop) (SWANSITY 2015), Seattle, USA, Jun. 2015.</strong>
 
 ## Model Assumption
 
